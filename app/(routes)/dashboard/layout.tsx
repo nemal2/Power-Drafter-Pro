@@ -4,6 +4,7 @@ import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 import { useConvex } from 'convex/react';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
+import SideNav from './_components/SideNav';
 
 function DashboardLayout(
     {
@@ -30,8 +31,14 @@ function DashboardLayout(
         }
     }
     return(
-        <div>
-           {children} 
+        <div className='grid grid-cols-4'>
+            <div>
+                <SideNav/>
+            </div>
+            <div className='grid-cols-3'>
+                {children} 
+            </div>
+           
         </div>
     )
 }
