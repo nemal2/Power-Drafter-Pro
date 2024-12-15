@@ -75,9 +75,6 @@ function SideNavBottom() {
         </Dialog>
 
 
-      
-
-
       {/* Progress Bar */}
       <div className='h-4 w-full bg-gray-200 rounded-full mt-5'>
         <div className={`h-4  bg-blue-600 rounded-full`}
