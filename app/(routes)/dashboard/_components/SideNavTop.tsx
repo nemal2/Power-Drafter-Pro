@@ -85,7 +85,7 @@ function SideNavTop({user}:any) {
                     {teamList?.map((item,index)=>(
                         <h2 key={index}
                         className={`p-2 hover:bg-blue-500 hover:text-white
-                         rounded-lg mb-1 cursor-pointer  ${activeTeam?._id===item._id&&'bg-blue-500 text-white'}`} 
+                         rounded-lg mb-1cursor-pointer  ${activeTeam?._id===item._id&&'bg-blue-500 text-white'}`} 
                         onClick={()=>setActiveTeam(item)}
                         >{item.teamName}</h2>
                     ))}
