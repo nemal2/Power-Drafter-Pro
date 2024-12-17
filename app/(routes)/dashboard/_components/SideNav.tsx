@@ -6,6 +6,9 @@ import SideNavBottom from './SideNavBottom';
 
 
 function SideNav() {
+    
+
+
     const {user}=useKindeBrowserClient();
   return (
     <div 

@@ -1,8 +1,22 @@
 import { Button } from '@/components/ui/button'
 import { Archive, Flag, Github } from 'lucide-react'
 import React from 'react'
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+  } from "@/components/ui/dialog"
+import { Input } from '@/components/ui/input'
+  
 
 function SideNavBottom() {
+
+    const [fileInput,setFileInput]=React.useState('')
 
     const menuList=[
         {
@@ -35,8 +49,30 @@ function SideNavBottom() {
       ))}
 
       {/* Add New File Button */}
-      <Button className='w-full bg-blue-600 
+      <Dialog>
+        <DialogTrigger  className='w-full'>
+        <Button className='w-full bg-blue-600 
       hover:bg-blue-700 justify-start mt-3'>New File</Button>
+        </DialogTrigger>
+        <DialogContent>
+            <DialogHeader>
+            <DialogTitle>Create New File</DialogTitle>
+            <DialogDescription>
+                <Input placeholder='Enter File Name' className='mt-3'
+                onChange={(e)=>setFileInput(e.target.value)}
+                />
+            </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="">
+          <DialogClose asChild>
+            <Button type="button" className='bg-blue-600 hover:bg-blue-700'
+            disabled={!(fileInput&&fileInput.length> 0) }>
+              Create
+            </Button>
+          </DialogClose>
+        </DialogFooter>
+        </DialogContent>
+        </Dialog>
 
 
       {/* Progress Bar */}
