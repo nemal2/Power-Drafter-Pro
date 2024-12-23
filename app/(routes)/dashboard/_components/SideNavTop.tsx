@@ -24,7 +24,7 @@ export interface TEAM{
 }
 
 
-function SideNavTop({user}:any) {
+function SideNavTop({user,setActiveTeamInfo}:any) {
 
     const menu = [
         {
@@ -32,7 +32,7 @@ function SideNavTop({user}:any) {
             name: 'Create Team',
             path: '/teams/create',
             icon: Users
-        },
+        }, 
         {
             id: 2,
             name: 'Settings',
@@ -49,6 +49,10 @@ function SideNavTop({user}:any) {
     useEffect(() => {
         user&&getTeamList();
     }, [user]);
+
+    useEffect(() => {
+        activeTeam&&setActiveTeamInfo(activeTeam);
+    }, [activeTeam])
 
     const getTeamList = async () => {
         const result = await convex.query(api.teams.getTeams, { email: user?.email });

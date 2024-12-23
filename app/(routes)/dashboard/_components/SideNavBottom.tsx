@@ -14,7 +14,7 @@ import {
 import { Input } from '@/components/ui/input'
   
 
-function SideNavBottom() {
+function SideNavBottom({onFileCreate,totalFiles}:any) {
 
     const [fileInput,setFileInput]=React.useState('')
 
@@ -50,7 +50,7 @@ function SideNavBottom() {
 
       {/* Add New File Button */}
       <Dialog>
-        <DialogTrigger  className='w-full'>
+        <DialogTrigger  className='w-full' asChild>
         <Button className='w-full bg-blue-600 
       hover:bg-blue-700 justify-start mt-3'>New File</Button>
         </DialogTrigger>
@@ -66,7 +66,9 @@ function SideNavBottom() {
             <DialogFooter className="">
           <DialogClose asChild>
             <Button type="button" className='bg-blue-600 hover:bg-blue-700'
-            disabled={!(fileInput&&fileInput.length> 0) }>
+            disabled={!(fileInput&&fileInput.length> 3) }
+            onClick={()=>onFileCreate(fileInput)}
+            >
               Create
             </Button>
           </DialogClose>
@@ -77,13 +79,13 @@ function SideNavBottom() {
 
       {/* Progress Bar */}
       <div className='h-4 w-full bg-gray-200 rounded-full mt-5'>
-        <div className={`h-4  bg-blue-600 rounded-full`}
+        <div className={`h-4 w-[${(totalFiles/5)*100}%]  bg-blue-600 rounded-full`}
         style={{width:'50%'}}>
 
         </div>
       </div>
       <h2 className='text-[12px] mt-3'>
-        <strong>1</strong> out of <strong>5</strong> files used</h2>
+        <strong>{totalFiles}</strong> out of <strong>5</strong> files used</h2>
       <h2 className='text-[12px] mt-1'>Upgrade your plan for unlimited access.</h2>  
 
     </div>
