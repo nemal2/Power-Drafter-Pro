@@ -1,39 +1,41 @@
+# PowerDrafter
 
-![Build   Deploy Erasor io Clone Using Next Js   React with Typescript](https://github.com/rrs301/erasor_clone/assets/20216436/4dfdc7cf-3b26-43ca-bcb0-7afcb19c190a)
+PowerDrafter is a software project developed as part of the Semester 6 curriculum. This project aims to replicate the functionality of an eraser tool in a drawing application.
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Features
 
-## Getting Started
+- Erase parts of a drawing
+- Adjustable eraser size
+- Undo and redo functionality
+- User-friendly interface
 
-First, run the development server:
+## Installation
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+To install and run the project, follow these steps:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/yourusername/powerdrafter.git
+    ```
+2. Navigate to the project directory:
+    ```bash
+    cd powerdrafter
+    ```
+3. Install the required dependencies:
+    ```bash
+    npm install
+    ```
+4. Start the application:
+    ```bash
+    npm start
+    ```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## License
 
-## Learn More
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-To learn more about Next.js, take a look at the following resources:
+## Contact
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+For any questions or feedback, please contact [yourname](mailto:yourname@example.com).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
