@@ -1,6 +1,6 @@
-// components/BudgetCalculator.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Pin, X, Trash2 } from 'lucide-react';
+import { LibraryItem } from './CanvasSidebar/ComponentPanel';
 
 interface Component {
   name: string;
@@ -9,70 +9,58 @@ interface Component {
 }
 
 interface BudgetCalculatorProps {
-  onDeleteComponent?: (index: number) => void;
+  items: LibraryItem[];
+  onUpdateQuantity?: (id: string, newQuantity: number) => void;
+  onRemoveItem?: (id: string) => void;
 }
 
-function BudgetCalculator({ onDeleteComponent }: BudgetCalculatorProps) {
-  const [components, setComponents] = useState<Component[]>([]);
+const BudgetCalculator: React.FC<BudgetCalculatorProps> = ({
+  items,
+  onUpdateQuantity,
+  onRemoveItem
+}) => {
+  // Calculate quantities for each unique item
+  const itemCounts = items.reduce((acc, item) => {
+    acc[item.id] = (acc[item.id] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
 
-  const addComponent = (component: Component) => {
-    setComponents(prev => {
-      // Check if component already exists
-      const existingIndex = prev.findIndex(c => c.name === component.name);
-      if (existingIndex >= 0) {
-        // Update quantity of existing component
-        const updated = [...prev];
-        updated[existingIndex].quantity += component.quantity;
-        return updated;
-      }
-      // Add new component
-      return [...prev, component];
-    });
-  };
+  // Create unique items list with quantities
+  const uniqueItems = Object.entries(itemCounts).map(([id, quantity]) => {
+    const item = items.find(i => i.id === id)!;
+    return {
+      ...item,
+      quantity,
+      totalPrice: item.price * quantity
+    };
+  });
 
-  const removeComponent = (index: number) => {
-    setComponents(prev => {
-      const updated = [...prev];
-      updated.splice(index, 1);
-      return updated;
-    });
-    onDeleteComponent?.(index);
-  };
-
-  const updateQuantity = (index: number, newQuantity: number) => {
-    setComponents(prev => {
-      const updated = [...prev];
-      updated[index].quantity = Math.max(1, newQuantity);
-      return updated;
-    });
-  };
-
-  const total = components.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const total = uniqueItems.reduce((sum, item) => sum + item.totalPrice, 0);
 
   return (
     <div className="bg-[#f5f5dc] p-6 max-w-md mx-auto min-h-[90vh] flex flex-col justify-between">
       <div>
         <h2 className="text-xl font-semibold mb-4 flex justify-between items-center">
           <Pin />
-          <span>Components</span>
+          <span>Components List</span>
           <X />
         </h2>
         <ul className="space-y-4">
-          {components.map((item, index) => (
-            <li key={index} className="flex justify-between items-center p-3 bg-white rounded-lg shadow">
+          {uniqueItems.map((item) => (
+            <li key={item.id} className="flex justify-between items-center p-3 bg-white rounded-lg shadow">
               <div className="flex-1">
                 <p className="font-medium text-gray-700">{item.name}</p>
                 <div className="flex items-center mt-1">
                   <button 
                     className="text-gray-500 hover:text-gray-700"
-                    onClick={() => updateQuantity(index, item.quantity - 1)}
+                    onClick={() => onUpdateQuantity?.(item.id, item.quantity - 1)}
                   >
                     -
                   </button>
                   <span className="mx-2">Qty: {item.quantity}</span>
                   <button 
                     className="text-gray-500 hover:text-gray-700"
-                    onClick={() => updateQuantity(index, item.quantity + 1)}
+                    onClick={() => onUpdateQuantity?.(item.id, item.quantity + 1)}
                   >
                     +
                   </button>
@@ -80,10 +68,10 @@ function BudgetCalculator({ onDeleteComponent }: BudgetCalculatorProps) {
               </div>
               <div className="flex flex-col items-end">
                 <span className="text-gray-900 font-semibold">
-                  LKR {(item.price * item.quantity).toLocaleString()}
+                  LKR {item.totalPrice.toLocaleString()}
                 </span>
                 <button 
-                  onClick={() => removeComponent(index)}
+                  onClick={() => onRemoveItem?.(item.id)}
                   className="text-red-500 hover:text-red-700 mt-1"
                 >
                   <Trash2 size={16} />
@@ -93,17 +81,17 @@ function BudgetCalculator({ onDeleteComponent }: BudgetCalculatorProps) {
           ))}
         </ul>
       </div>
-      <div className="bottom-0 left-0 w-full bg-[#f5f5dc] p-6 border-t">
+      <div className="mt-4">
         <div className="flex justify-between items-center mb-4">
           <strong className="text-lg">Total</strong>
           <span className="text-lg font-semibold">LKR {total.toLocaleString()}</span>
         </div>
-        <button className="w-full text-center text-custom-teal border-2 rounded-lg border-custom-teal p-2 hover:bg-custom-teal hover:text-white transition-colors">
+        <button className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">
           Get Quotation
         </button>
       </div>
     </div>
   );
-}
+};
 
 export default BudgetCalculator;

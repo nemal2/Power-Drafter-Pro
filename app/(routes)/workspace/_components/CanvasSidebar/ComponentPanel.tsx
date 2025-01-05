@@ -3,6 +3,7 @@ import { LibraryItems } from "./LibraryItems";
 import LibraryImages from "./LibraryImages";
 
 export interface LibraryItem {
+  [x: string]: number;
   id: string;
   name: string;
   svg: string; // Path or SVG string for the image/icon

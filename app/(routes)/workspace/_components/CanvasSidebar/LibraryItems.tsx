@@ -5,27 +5,35 @@ export interface LibraryItem {
   id: string;
   name: string;
   svg: string;
+  price: number;  // Add price field
 }
 
 export const LibraryItems: LibraryItem[] = [
   {
     id: "1",
-    name: "resiistor",
+    name: "Resistor",
     svg: "/components/a1.png",
+    price: 50.00
   },
   {
     id: "2",
-    name: "Square",
+    name: "Capacitor",
     svg: "/components/a2.png",
+    price: 75.00
   },
   {
     id: "3",
-    name: "Triangle",
+    name: "Switch",
     svg: "/components/a3.png",
+    price: 120.00
   },
-  // Add more items as needed
+  {
+    id: "4",
+    name: "Breaker",
+    svg: "/components/a1.png",
+    price: 200.00
+  }
 ];
-
 export const LibraryItemComponent: React.FC<{ item: LibraryItem }> = ({
   item,
 }) => {

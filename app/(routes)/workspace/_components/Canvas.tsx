@@ -827,7 +827,18 @@ import { useDrop } from "react-dnd";
 import { LibraryItems, LibraryItemComponent, LibraryItem } from "./CanvasSidebar/LibraryItems";
 import html2canvas from "html2canvas";
 
-const Canvas: React.FC = () => {
+interface CanvasProps {
+  onDragStart: (e: React.DragEvent<HTMLImageElement>, src: string) => void;
+  draggedImage: string | null;
+  onDropComplete: () => void;
+  onComponentAdd?: (component: LibraryItem) => void;  // Add this prop
+}
+const Canvas: React.FC<CanvasProps> = ({
+  onDragStart,
+  draggedImage,
+  onDropComplete,
+  onComponentAdd
+}) => {
   const canvasRef = useRef<HTMLDivElement | null>(null);
   const [board, setBoard] = useState<LibraryItem[]>([]);
 
@@ -836,7 +847,13 @@ const Canvas: React.FC = () => {
       ...prevBoard,
       { ...item, x, y },
     ]);
+    
+    // Notify parent component about the new component
+    onComponentAdd?.(item);
+    onDropComplete();
   };
+
+  // Rest of your Canvas component code remains the same...
 
   const [{ isOver }, drop] = useDrop(() => ({
     accept: "libraryItem",
@@ -853,6 +870,7 @@ const Canvas: React.FC = () => {
       isOver: !!monitor.isOver(),
     }),
   }));
+
 
   const saveAsPNG = () => {
     if (!canvasRef.current) return;
