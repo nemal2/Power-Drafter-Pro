@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { LayoutGrid, Cpu, FolderPlus, Text, Package } from "lucide-react";
-import ComponentPanel, { LibraryItem } from "./ComponentPanel";
-import { LibraryItems } from "./LibraryItems";
+import { LibraryItems, LibraryItemComponent, LibraryItem } from "./LibraryItems";
 
 function CanvasSidebar({
   onAddElement,
@@ -40,13 +39,20 @@ function CanvasSidebar({
         />
       </div>
 
-      {/* Component Panel */}
-      {activePanel === "components" && (
-        <ComponentPanel
-          items={LibraryItems}
-          onSelectComponent={onAddElement}
-        />
-      )}
+      {/* Render components for the active panel */}
+      <div className="flex-1 p-4 bg-gray-100">
+        {activePanel === "components" && (
+          <div className="grid grid-cols-3 gap-4 w-60">
+            {LibraryItems.map((item) => (
+              <LibraryItemComponent
+                key={item.id}
+                item={item}
+                onClick={() => onAddElement(item)}
+              />
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
