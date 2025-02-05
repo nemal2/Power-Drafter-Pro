@@ -1,4 +1,4 @@
-// File: E:\6_semester\software_project\sprint_4\update\erasor_clone-main\app\api\auth\[kindeAuth]\route.js
+// File: D:\Projects\jan 15-final\PowerDrafter\app\api\auth\[kindeAuth]\route.js
 import * as entry from '../../../../../../app/api/auth/[kindeAuth]/route.js'
 import type { NextRequest } from 'next/server.js'
 

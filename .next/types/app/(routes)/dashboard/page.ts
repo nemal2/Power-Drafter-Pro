@@ -1,4 +1,4 @@
-// File: E:\6_semester\software_project\sprint_4\update\erasor_clone-main\app\(routes)\dashboard\page.tsx
+// File: D:\Projects\jan 15-final\PowerDrafter\app\(routes)\dashboard\page.tsx
 import * as entry from '../../../../../app/(routes)/dashboard/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
