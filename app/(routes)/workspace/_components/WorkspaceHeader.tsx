@@ -5,13 +5,13 @@ import React from 'react'
 
 function WorkspaceHeader({onSave}:any) {
   return (
-    <div className='p-3 border-b flex justify-between items-center'>
+    <div className='p-3 border-b flex justify-between items-center bg-teal-700'>
       <div className='flex gap-2 items-center'>
-        <Image src={'/logo-1.png'}
+        <Image src={'/111.png'}
           alt='logo'
           height={40}
           width={40} />
-        <h2>File Name</h2>
+        <h2 className='text-slate-50'>PanelPro</h2>
       </div>
       <div className='flex items-center gap-4'>
         <Button className='h-8 text-[12px]

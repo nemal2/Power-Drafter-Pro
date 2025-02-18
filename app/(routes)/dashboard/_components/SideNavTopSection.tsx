@@ -65,7 +65,7 @@ function SideNavTopSection({user,setActiveTeamInfo}:any) {
       hover:bg-slate-200 p-3 rounded-lg
       cursor-pointer
       '>
-                    <Image src='/logo-1.png' alt='logo'
+                    <Image src='/111.png' alt='logo'
                         width={40}
                         height={40} />
                     <h2 className='flex gap-2 

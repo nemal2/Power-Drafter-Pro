@@ -1,49 +1,123 @@
+// CanvasSidebar/index.tsx
 import React, { useState } from "react";
-import { LayoutGrid, Cpu, FolderPlus, Text, Package } from "lucide-react";
-import { LibraryItems, LibraryItemComponent, LibraryItem } from "./LibraryItems";
+import { LayoutGrid, Cpu, FolderPlus, Text, Package, List } from "lucide-react";
+import { LibraryItems, LibraryItem, LibraryItemComponent } from "./LibraryItems";
+import ComponentCatalog from "./Catalog";
+
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 function CanvasSidebar({
   onAddElement,
+  toggleBudgetCalculator,
 }: {
   onAddElement: (element: LibraryItem) => void;
+  toggleBudgetCalculator: () => void;
 }) {
-  const [activePanel, setActivePanel] = useState<string | null>(null);
+  const [activePanel, setActivePanel] = useState<string | null>("components");
+  const [isCatalogOpen, setIsCatalogOpen] = useState(false);
+  const [sidebarItems, setSidebarItems] = useState<LibraryItem[]>(LibraryItems);
 
   const togglePanel = (panelName: string) => {
     setActivePanel(activePanel === panelName ? null : panelName);
+  };
+
+  const handleComponentSelect = (component: LibraryItem) => {
+    // Add the selected component to the sidebar items
+    setSidebarItems(prev => [...prev, {
+      ...component,
+      id: `${component.id}-${Date.now()}` // Ensure unique ID
+    }]);
   };
 
   return (
     <div className="flex h-full">
       {/* Main Sidebar */}
       <div className="flex flex-col space-y-8 text-gray-500 items-center p-4 bg-white border-r">
-        <Text
-          className="text-2xl cursor-pointer hover:text-gray-700"
-          onClick={() => togglePanel("text")}
-        />
-        <LayoutGrid
-          className="text-2xl cursor-pointer hover:text-gray-700"
-          onClick={() => togglePanel("grid")}
-        />
-        <Package
-          className="text-2xl cursor-pointer hover:text-gray-700"
-          onClick={() => togglePanel("components")}
-        />
-        <Cpu
-          className="text-2xl cursor-pointer hover:text-gray-700"
-          onClick={() => togglePanel("cpu")}
-        />
-        <FolderPlus
-          className="text-2xl cursor-pointer hover:text-gray-700"
-          onClick={() => togglePanel("folder")}
-        />
+      <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <Text
+                className="text-2xl cursor-pointer hover:text-gray-700"
+                onClick={() => togglePanel("text")}
+              />
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Text Tools</p>
+            </TooltipContent>
+          </Tooltip>
+
+          <Tooltip>
+            <TooltipTrigger>
+              <LayoutGrid
+                className="text-2xl cursor-pointer hover:text-gray-700"
+                onClick={() => togglePanel("grid")}
+              />
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Layout Grid</p>
+            </TooltipContent>
+          </Tooltip>
+
+          <Tooltip>
+            <TooltipTrigger>
+              <Package
+                className="text-2xl cursor-pointer hover:text-gray-700"
+                onClick={() => togglePanel("components")}
+              />
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Components</p>
+            </TooltipContent>
+          </Tooltip>
+
+          <Tooltip>
+            <TooltipTrigger>
+              <FolderPlus
+                className="text-2xl cursor-pointer hover:text-gray-700"
+                onClick={() => setIsCatalogOpen(true)}
+              />
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Add Components</p>
+            </TooltipContent>
+          </Tooltip>
+
+          <Tooltip>
+            <TooltipTrigger>
+              <Cpu
+                className="text-2xl cursor-pointer hover:text-gray-700"
+                onClick={() => togglePanel("cpu")}
+              />
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>System Components</p>
+            </TooltipContent>
+          </Tooltip>
+
+          <Tooltip>
+            <TooltipTrigger>
+              <List
+                className="text-2xl cursor-pointer hover:text-gray-700"
+                onClick={toggleBudgetCalculator}
+              />
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Budget Calculator</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
 
-      {/* Render components for the active panel */}
-      <div className="flex-1 p-4 bg-gray-100">
+      {/* Sidebar Component Panel */}
+      <div className="border-r shadow bg-slate-50 radius">
         {activePanel === "components" && (
-          <div className="grid grid-cols-3 gap-4 w-60">
-            {LibraryItems.map((item) => (
+          <div className="grid grid-cols-2 gap-4 w-60 p-2  ">
+            {sidebarItems.map((item) => (
               <LibraryItemComponent
                 key={item.id}
                 item={item}
@@ -53,6 +127,13 @@ function CanvasSidebar({
           </div>
         )}
       </div>
+
+      {/* Component Catalog Modal */}
+      <ComponentCatalog
+        isOpen={isCatalogOpen}
+        onClose={() => setIsCatalogOpen(false)}
+        onSelectComponent={handleComponentSelect}
+      />
     </div>
   );
 }
