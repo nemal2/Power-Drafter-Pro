@@ -54,20 +54,20 @@ export const getFileById = query({
   }
 });
 
-// Save canvas state
 export const saveCanvasState = mutation({
   args: {
-    fileId: v.id("files"), // Optional fileId if provided, otherwise default to v.id("files"),
+    fileId: v.id("files"),
     components: v.array(
       v.object({
         id: v.string(),
         name: v.string(),
-        description: v.optional(v.string()),
         svg: v.string(),
-        x: v.number(),
-        y: v.number(),
+        x: v.float64(),
+        y: v.float64(),
+        rotation: v.float64(),
+        description: v.optional(v.string()),
         instanceId: v.string(),
-        price: v.number(),
+        price: v.float64(),
         specs: v.optional(v.object({
           power: v.array(v.string()),
           resistance: v.array(v.string()),
@@ -76,13 +76,13 @@ export const saveCanvasState = mutation({
       })
     ),
     budget: v.object({
-      total: v.number(),
+      total: v.float64(),
       items: v.array(
         v.object({
           id: v.string(),
           name: v.string(),
-          quantity: v.number(),
-          price: v.number()
+          quantity: v.float64(),
+          price: v.float64()
         })
       )
     })
@@ -91,6 +91,7 @@ export const saveCanvasState = mutation({
     if (!args.fileId) {
       throw new Error("fileId is required");
     }
+    
     try {
       const result = await ctx.db.patch(args.fileId, {
         canvasComponents: args.components,

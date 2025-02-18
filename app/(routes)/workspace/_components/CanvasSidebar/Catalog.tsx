@@ -59,7 +59,7 @@ const ComponentCatalog: React.FC<ComponentCatalogProps> = ({
           tolerance: ['±1%', '±5%']
           
         },
-        description: 'Standard through-hole resistor for general-purpose applications'
+        description: 'Standard through hole resistor for general-purpose applications'
       },
       // ... other passive components
     ],

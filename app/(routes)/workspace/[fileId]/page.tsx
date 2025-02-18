@@ -195,13 +195,19 @@ const Workspace: React.FC<{ params: { fileId: string } }> = ({ params }) => {
           }, new Map())
         ).map(([_, item]) => item)
       };
-
+  
+      // Ensure all components have a rotation value
+      const componentsWithRotation = components.map(comp => ({
+        ...comp,
+        rotation: comp.rotation || 0.0
+      }));
+  
       await convex.mutation(api.files.saveCanvasState, {
         fileId: params.fileId as Id<"files">,
-        components,
+        components: componentsWithRotation,
         budget
       });
-
+  
       toast.success("Workspace saved successfully");
     } catch (error) {
       console.error("Error saving workspace:", error);
@@ -210,10 +216,6 @@ const Workspace: React.FC<{ params: { fileId: string } }> = ({ params }) => {
       setSaving(false);
     }
   };
-
-  if (loading) {
-    return <div className="flex items-center justify-center h-screen"><FadingDots width="50px" height="50px" duration="0.3s"/></div>;
-  }
   
 
   return (
