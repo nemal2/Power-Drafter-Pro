@@ -10,6 +10,7 @@ interface CanvasComponent extends LibraryItem {
   x: number;
   y: number;
   instanceId: string;
+  rotation?: number; // Add rotation property
 }
 
 interface CanvasProps {
@@ -33,6 +34,7 @@ const Canvas: React.FC<CanvasProps> = ({
 }) => {
   const canvasRef = useRef<HTMLDivElement | null>(null);
   const [positions, setPositions] = useState<Record<string, { x: number; y: number }>>({});
+  const [rotations, setRotations] = useState<Record<string, number>>({});
   const [contextMenu, setContextMenu] = useState<{
     visible: boolean;
     x: number;
@@ -49,12 +51,15 @@ const Canvas: React.FC<CanvasProps> = ({
     if (!components) return;
     
     const initialPositions: Record<string, { x: number; y: number }> = {};
+    const initialRotations: Record<string, number> = {};
     components.forEach(comp => {
       if (comp) {
         initialPositions[comp.instanceId] = { x: comp.x, y: comp.y };
+        initialRotations[comp.instanceId] = comp.rotation || 0;
       }
     });
     setPositions(initialPositions);
+    setRotations(initialRotations);
   }, [components]);
 
   const handleDrop = (item: LibraryItem, dropX: number, dropY: number) => {
@@ -63,16 +68,18 @@ const Canvas: React.FC<CanvasProps> = ({
         ...item,
         x: dropX,
         y: dropY,
-        instanceId: `${item.id}-${Date.now()}`
+        instanceId: `${item.id}-${Date.now()}`,
+        rotation: 0.0 // Ensure rotation is always set
       };
       onComponentAdd(newComponent, 'add');
     }
     onDropComplete();
   };
-
+  
+  // Update the handleDragStop function:
   const handleDragStop = (instanceId: string, data: { x: number; y: number }) => {
     if (!components) return;
-
+  
     const updatedPositions = {
       ...positions,
       [instanceId]: { x: data.x, y: data.y }
@@ -81,8 +88,35 @@ const Canvas: React.FC<CanvasProps> = ({
     
     const component = components.find(comp => comp.instanceId === instanceId);
     if (component && onComponentAdd) {
-      onComponentAdd({ ...component, x: data.x, y: data.y }, 'move');
+      onComponentAdd({ 
+        ...component, 
+        x: data.x, 
+        y: data.y,
+        rotation: rotations[instanceId] || 0.0 // Ensure rotation is always set
+      }, 'move');
     }
+  };
+  
+  // Update the handleRotate function:
+  const handleRotate = (instanceId: string, degrees: number) => {
+    const currentRotation = rotations[instanceId] || 0;
+    const newRotation = (currentRotation + degrees) % 360;
+    
+    setRotations(prev => ({
+      ...prev,
+      [instanceId]: newRotation
+    }));
+  
+    const component = components.find(comp => comp.instanceId === instanceId);
+    if (component && onComponentAdd) {
+      onComponentAdd({
+        ...component,
+        rotation: newRotation,
+        x: positions[instanceId]?.x || component.x,
+        y: positions[instanceId]?.y || component.y
+      }, 'move');
+    }
+    setContextMenu({ visible: false, x: 0, y: 0, instanceId: '' });
   };
   
   const [{ isOver }, drop] = useDrop(() => ({
@@ -186,7 +220,9 @@ const Canvas: React.FC<CanvasProps> = ({
                     backgroundImage: `url(${item.svg})`,
                     backgroundSize: "contain",
                     backgroundRepeat: "no-repeat",
-                    backgroundPosition: "center"
+                    backgroundPosition: "center",
+                    transform: `rotate(${rotations[item.instanceId] || 0}deg)`,
+                    transition: 'transform 0.3s ease'
                   }}
                 />
               </div>
@@ -199,6 +235,18 @@ const Canvas: React.FC<CanvasProps> = ({
               className="fixed bg-white shadow-lg rounded-md py-2 z-50"
               style={{ top: contextMenu.y, left: contextMenu.x }}
             >
+              <button 
+                className="w-full text-left px-4 py-2 hover:bg-gray-100"
+                onClick={() => handleRotate(contextMenu.instanceId, 90)}
+              >
+                Rotate 90°
+              </button>
+              <button 
+                className="w-full text-left px-4 py-2 hover:bg-gray-100"
+                onClick={() => handleRotate(contextMenu.instanceId, 180)}
+              >
+                Rotate 180°
+              </button>
               <button 
                 className="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600"
                 onClick={handleDelete}
