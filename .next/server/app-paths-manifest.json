@@ -1,5 +1,3 @@
 {
-  "/page": "app/page.js",
-  "/(routes)/workspace/[fileId]/page": "app/(routes)/workspace/[fileId]/page.js",
-  "/(routes)/dashboard/page": "app/(routes)/dashboard/page.js"
+  "/(routes)/workspace/[fileId]/page": "app/(routes)/workspace/[fileId]/page.js"
 }
