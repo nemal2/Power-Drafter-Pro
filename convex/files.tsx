@@ -2,6 +2,7 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { Id } from "./_generated/dataModel";
+import { componentValidator } from "./types";
 
 // Create file mutation
 export const createFile = mutation({
@@ -57,24 +58,7 @@ export const getFileById = query({
 export const saveCanvasState = mutation({
   args: {
     fileId: v.id("files"),
-    components: v.array(
-      v.object({
-        id: v.string(),
-        name: v.string(),
-        svg: v.string(),
-        x: v.float64(),
-        y: v.float64(),
-        rotation: v.float64(),
-        description: v.optional(v.string()),
-        instanceId: v.string(),
-        price: v.float64(),
-        specs: v.optional(v.object({
-          power: v.array(v.string()),
-          resistance: v.array(v.string()),
-          tolerance: v.array(v.string())
-        }))
-      })
-    ),
+    components: v.array(componentValidator),
     budget: v.object({
       total: v.float64(),
       items: v.array(
@@ -92,9 +76,15 @@ export const saveCanvasState = mutation({
       throw new Error("fileId is required");
     }
     
+    // Ensure all components have a rotation value
+    const componentsWithRotation = args.components.map(comp => ({
+      ...comp,
+      rotation: comp.rotation ?? 0.0 // Add default rotation if missing
+    }));
+    
     try {
       const result = await ctx.db.patch(args.fileId, {
-        canvasComponents: args.components,
+        canvasComponents: componentsWithRotation,
         budget: args.budget
       });
       return result;

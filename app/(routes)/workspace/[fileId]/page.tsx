@@ -199,7 +199,7 @@ const Workspace: React.FC<{ params: { fileId: string } }> = ({ params }) => {
       // Ensure all components have a rotation value
       const componentsWithRotation = components.map(comp => ({
         ...comp,
-        rotation: comp.rotation || 0.0
+        rotation: comp.rotation ?? 0.0
       }));
   
       await convex.mutation(api.files.saveCanvasState, {
