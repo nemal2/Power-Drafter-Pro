@@ -5,22 +5,30 @@ import { PricingTier } from "./PricingTier";
 import { FAQItem } from "./FAQItem";
 import { FooterLink } from "./FooterLink";
 import { SocialIcon } from "./SocialIcon";
-import { LoginLink } from "@kinde-oss/kinde-auth-nextjs";
+import { BiCustomize, BiCalculator } from "react-icons/bi";
+import { CiCalculator2 } from "react-icons/ci";
+import { FaFilePdf } from "react-icons/fa6";
+
+import { LoginLink, RegisterLink } from '@kinde-oss/kinde-auth-nextjs'
+
 
 const navItems = ["About", "Features", "Pricing", "Gallery", "Team"];
 const features = [
   {
     title: "Intuitive Design Interface",
+    icon: <BiCustomize />,
     description:
       "Easily create and customize electrical panel board designs with our user-friendly drag-and-drop interface.",
   },
   {
     title: "Real-Time Cost Calculation",
+    icon: <BiCalculator />,
     description:
       "Automatically update the total price of components used as you design, ensuring budget accuracy.",
   },
   {
     title: "Quotation Generation",
+    icon: <FaFilePdf />,
     description:
       "Instantly generate detailed quotations with a single click, saving time and ensuring precision.",
   },
@@ -115,19 +123,18 @@ export default function PanelPro() {
               Sign Up
             </button>
             
-            <div className="flex gap-5 self-stretch my-auto text-base text-center">
-            <LoginLink postLoginRedirectURL="/dashboard"> Login</LoginLink>
-            </div>
-            
+            <button className="gap-2.5 self-stretch px-7 py-3 border-2 border-solid border-slate-600 rounded-[50px] text-slate-600 max-md:px-5">
+              <LoginLink postLoginRedirectURL="/dashboard"> Login</LoginLink>
+            </button>
           </div>
         </nav>
       </header>
 
       <main>
-        <section className="hero-section mt-10 px-20 max-md:px-5 max-md:max-w-full">
-          <div className="flex gap-5 max-md:flex-col">
+        <section className="hero-section mt-10 px-20  max-md:px-5 max-md:max-w-full min-h-[calc(100vh-100px)]">
+           
             <div className="flex flex-col w-[54%] max-md:w-full">
-              <h1 className="text-7xl font-bold text-neutral-700 max-md:text-4xl">
+              <h1 className="text-7xl font-bold text-neutral-700 max-md:text-4xl ">
                 Design Your Perfect Panel Board Online
               </h1>
               <div className="flex flex-wrap gap-3 mt-10 max-w-full text-lg text-center w-[537px]">
@@ -139,7 +146,7 @@ export default function PanelPro() {
                 </button>
               </div>
             </div>
-          </div>
+       
         </section>
 
         <section className="features-section flex flex-col items-center px-12 py-20 bg-neutral-100 bg-opacity-90 max-md:px-5">
@@ -148,7 +155,7 @@ export default function PanelPro() {
           </h2>
           <div className="flex overflow-hidden flex-wrap gap-10 justify-between items-center px-36 mt-6 max-w-full w-[1414px] max-md:px-5">
             {features.map((feature, index) => (
-              <FeatureCard key={index} {...feature} icon="" />
+              <FeatureCard key={index} {...feature} />
             ))}
           </div>
         </section>

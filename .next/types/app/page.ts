@@ -1,4 +1,4 @@
-// File: E:\6_semester\software_project\sprint_4\newest\erasor_clone-main_new - update\powerdrafter\app\page.tsx
+// File: D:\Semester 6\Software Project\Power Drafter\power_drafter\app\page.tsx
 import * as entry from '../../../app/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
