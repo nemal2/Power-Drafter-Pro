@@ -18,7 +18,6 @@ interface CanvasComponent extends LibraryItem {
   x: number;
   y: number;
   instanceId: string;
-  price?: number;
   rotation?: number;
 }
 
@@ -54,38 +53,37 @@ const Workspace: React.FC<{ params: { fileId: string } }> = ({ params }) => {
     setShowBudgetCalculator(prev => !prev);
   }, []);
 
- // History states with action type
- const [history, setHistory] = useState<HistoryAction[]>([]);
- const [currentStep, setCurrentStep] = useState(-1);
+  // History states with action type
+  const [history, setHistory] = useState<HistoryAction[]>([]);
+  const [currentStep, setCurrentStep] = useState(-1);
 
-
- useEffect(() => {
-  const loadState = async () => {
-    try {
-      setLoading(true);
-      const state = await convex.query(api.files.getFileById, {
-        fileId: params.fileId as Id<"files">
-      });
-      
-      if (state?.canvasComponents?.length) {
-        setComponents(state.canvasComponents);
-        setHistory([{ type: 'add', components: state.canvasComponents }]);
-        setCurrentStep(0);
+  useEffect(() => {
+    const loadState = async () => {
+      try {
+        setLoading(true);
+        const state = await convex.query(api.files.getFileById, {
+          fileId: params.fileId as Id<"files">
+        });
+        
+        if (state?.canvasComponents?.length) {
+          setComponents(state.canvasComponents);
+          setHistory([{ type: 'add', components: state.canvasComponents }]);
+          setCurrentStep(0);
+        }
+      } catch (error) {
+        console.error("Error loading state:", error);
+        toast.error("Failed to load workspace");
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error("Error loading state:", error);
-      toast.error("Failed to load workspace");
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
     if (params.fileId) {
       loadState();
     }
   }, [convex, params.fileId]);
 
-   const addToHistory = useCallback((newComponents: CanvasComponent[], actionType: string, componentId?: string) => {
+  const addToHistory = useCallback((newComponents: CanvasComponent[], actionType: string, componentId?: string) => {
     const previousState = components;
     setHistory(prev => [...prev.slice(0, currentStep + 1), {
       type: actionType as 'add' | 'remove' | 'move' | 'quantity' | 'reset',
@@ -96,7 +94,6 @@ const Workspace: React.FC<{ params: { fileId: string } }> = ({ params }) => {
     setCurrentStep(prev => prev + 1);
     setComponents(newComponents);
   }, [currentStep, components]);
-
 
   const handleComponentAdd = useCallback((component: LibraryItem, actionType: string = 'add') => {
     const canvasComponent: CanvasComponent = {
@@ -122,7 +119,6 @@ const Workspace: React.FC<{ params: { fileId: string } }> = ({ params }) => {
     });
   }, [addToHistory]);
 
-
   const handleComponentDelete = useCallback((instanceId: string) => {
     setComponents(prev => {
       const newComponents = prev.filter(comp => comp.instanceId !== instanceId);
@@ -131,8 +127,7 @@ const Workspace: React.FC<{ params: { fileId: string } }> = ({ params }) => {
     });
   }, [addToHistory]);
 
-
-   const handleUpdateQuantity = useCallback((id: string, newQuantity: number) => {
+  const handleUpdateQuantity = useCallback((id: string, newQuantity: number) => {
     setComponents(prev => {
       const currentComponents = prev.filter(comp => comp.id === id);
       const otherComponents = prev.filter(comp => comp.id !== id);
@@ -158,7 +153,6 @@ const Workspace: React.FC<{ params: { fileId: string } }> = ({ params }) => {
       return newComponents;
     });
   }, [addToHistory]);
-
 
   const handleRemoveItem = useCallback((id: string) => {
     setComponents(prev => {

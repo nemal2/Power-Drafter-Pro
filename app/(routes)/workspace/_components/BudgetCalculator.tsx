@@ -29,7 +29,7 @@ const BudgetCalculator: React.FC<BudgetCalculatorProps> = ({
     return {
       ...item,
       quantity,
-      totalPrice: item.price * quantity
+      totalPrice: (item.price || 0) * quantity // Handle optional price
     };
   });
 
@@ -54,7 +54,7 @@ const BudgetCalculator: React.FC<BudgetCalculatorProps> = ({
     // Generate table rows
     const rows = uniqueItems.map((item) => [
       item.name,
-      item.price.toLocaleString(),
+      (item.price || 0).toLocaleString(),
       item.quantity,
       item.totalPrice.toLocaleString(),
     ]);

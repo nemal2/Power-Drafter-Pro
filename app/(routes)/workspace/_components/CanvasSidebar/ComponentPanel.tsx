@@ -9,7 +9,7 @@ export interface LibraryItem {
   id: string;
   name: string;
   svg: string; // Path or SVG string for the image/icon
-  price: number; // Added price field
+  price?: number; // Make price optional
 }
 
 function ComponentPanel() {
