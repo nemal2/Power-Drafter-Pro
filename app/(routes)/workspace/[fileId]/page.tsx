@@ -22,6 +22,11 @@ interface CanvasComponent extends LibraryItem {
   rotation?: number;
 }
 
+// Interface for the expected shape in the API
+interface SavedCanvasComponent extends Omit<CanvasComponent, 'price'> {
+  price: number;  // Non-optional price for API
+}
+
 interface HistoryAction {
   type: 'add' | 'remove' | 'move' | 'quantity'| 'reset';
   components: CanvasComponent[];
@@ -201,11 +206,12 @@ const Workspace: React.FC<{ params: { fileId: string } }> = ({ params }) => {
         ).map(([_, item]) => item)
       };
   
-      // Ensure all components have a rotation value
+      // Ensure all components have a rotation value AND a price value
       const componentsWithRotation = components.map(comp => ({
         ...comp,
-        rotation: comp.rotation ?? 0.0
-      }));
+        rotation: comp.rotation ?? 0.0,
+        price: comp.price ?? 0
+      })) as SavedCanvasComponent[];
   
       await convex.mutation(api.files.saveCanvasState, {
         fileId: params.fileId as Id<"files">,
