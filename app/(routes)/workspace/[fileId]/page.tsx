@@ -55,7 +55,7 @@ const Workspace: React.FC<{ params: { fileId: string } }> = ({ params }) => {
         fileId: params.fileId as Id<"files">
       });
       
-      if (state?.canvasComponents?.length > 0) {
+      if (state?.canvasComponents?.length) {
         setComponents(state.canvasComponents);
         setHistory([{ type: 'add', components: state.canvasComponents }]);
         setCurrentStep(0);
