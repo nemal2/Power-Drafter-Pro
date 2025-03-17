@@ -18,6 +18,8 @@ interface CanvasComponent extends LibraryItem {
   x: number;
   y: number;
   instanceId: string;
+  price?: number;
+  rotation?: number;
 }
 
 interface HistoryAction {
@@ -27,7 +29,12 @@ interface HistoryAction {
   previousState?: CanvasComponent[];
 }
 
-
+interface BudgetItem {
+  id: string;
+  name: string;
+  quantity: number;
+  price: number;
+}
 
 const Workspace: React.FC<{ params: { fileId: string } }> = ({ params }) => {
   const convex = useConvex();
@@ -55,7 +62,7 @@ const Workspace: React.FC<{ params: { fileId: string } }> = ({ params }) => {
         fileId: params.fileId as Id<"files">
       });
       
-      if (state?.canvasComponents?.length > 0) {
+      if (state?.canvasComponents?.length) {
         setComponents(state.canvasComponents);
         setHistory([{ type: 'add', components: state.canvasComponents }]);
         setCurrentStep(0);
@@ -171,13 +178,11 @@ const Workspace: React.FC<{ params: { fileId: string } }> = ({ params }) => {
     }
   }, [addToHistory, components.length]);
 
-
-
   const handleSave = async () => {
     try {
       setSaving(true);
       const budget = {
-        total: components.reduce((sum, item) => sum + item.price, 0),
+        total: components.reduce((sum, item) => sum + (item.price || 0), 0),
         items: Array.from(
           components.reduce((map, item) => {
             const existing = map.get(item.id);
@@ -188,11 +193,11 @@ const Workspace: React.FC<{ params: { fileId: string } }> = ({ params }) => {
                 id: item.id,
                 name: item.name,
                 quantity: 1,
-                price: item.price
-              });
+                price: item.price || 0
+              } as BudgetItem);
             }
             return map;
-          }, new Map())
+          }, new Map<string, BudgetItem>())
         ).map(([_, item]) => item)
       };
   
@@ -217,7 +222,6 @@ const Workspace: React.FC<{ params: { fileId: string } }> = ({ params }) => {
     }
   };
   
-
   return (
     <div>
       <WorkspaceHeader 
