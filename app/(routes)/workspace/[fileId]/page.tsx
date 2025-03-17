@@ -98,19 +98,26 @@ const Workspace: React.FC<{ params: { fileId: string } }> = ({ params }) => {
   }, [currentStep, components]);
 
 
-  const handleComponentAdd = useCallback((component: CanvasComponent, actionType: string) => {
+  const handleComponentAdd = useCallback((component: LibraryItem, actionType: string = 'add') => {
+    const canvasComponent: CanvasComponent = {
+      ...component,
+      x: component.x ?? Math.random() * 500 + 50,
+      y: component.y ?? Math.random() * 300 + 50,
+      instanceId: component.instanceId ?? `${component.id}-${Date.now()}-${Math.random()}`
+    };
+    
     setComponents(prev => {
-      const existingIndex = prev.findIndex(comp => comp.instanceId === component.instanceId);
+      const existingIndex = prev.findIndex(comp => comp.instanceId === canvasComponent.instanceId);
       let newComponents;
       
       if (existingIndex !== -1) {
         newComponents = [...prev];
-        newComponents[existingIndex] = component;
+        newComponents[existingIndex] = canvasComponent;
       } else {
-        newComponents = [...prev, component];
+        newComponents = [...prev, canvasComponent];
       }
       
-      addToHistory(newComponents, actionType, component.instanceId);
+      addToHistory(newComponents, actionType, canvasComponent.instanceId);
       return newComponents;
     });
   }, [addToHistory]);
