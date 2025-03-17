@@ -18,6 +18,7 @@ interface CanvasComponent extends LibraryItem {
   x: number;
   y: number;
   instanceId: string;
+  price?: number;
 }
 
 interface HistoryAction {
