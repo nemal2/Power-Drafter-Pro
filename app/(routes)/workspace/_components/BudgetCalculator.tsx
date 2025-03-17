@@ -1,14 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import jsPDF from 'jspdf';
 import { Pin, X, Trash2 } from 'lucide-react';
 import autoTable from 'jspdf-autotable';
 import { LibraryItem } from './CanvasSidebar/ComponentPanel';
-
-interface Component {
-  name: string;
-  price: number;
-  quantity: number;
-}
 
 interface BudgetCalculatorProps {
   items: LibraryItem[];
@@ -60,7 +54,7 @@ const BudgetCalculator: React.FC<BudgetCalculatorProps> = ({
     // Generate table rows
     const rows = uniqueItems.map((item) => [
       item.name,
-      item.totalPrice.toLocaleString(),
+      item.price.toLocaleString(),
       item.quantity,
       item.totalPrice.toLocaleString(),
     ]);
@@ -87,39 +81,34 @@ const BudgetCalculator: React.FC<BudgetCalculatorProps> = ({
   };
 
   return (
-    <div className="bg-inherit p-6 max-w-md mx-auto  flex flex-col justify-between h-full">
-      <div >
+    <div className="bg-inherit p-6 max-w-md mx-auto flex flex-col justify-between h-full">
+      <div>
         <h3 className="text-base font-semibold mb-4 flex justify-between items-center">
-          
-         <span>Components List</span>
+          <span>Components List</span>
           <button 
-        onClick={onClose}
-        aria-label="Close"
-        className="absolute w-10 h-10 rounded-full bg-neutral-100 flex items-center justify-center cursor-pointer p-0 z-[2] top-[12px] right-[12px]"
-      >
-        <svg 
-          width="1em" 
-          height="1em" 
-          viewBox="0 0 24 24" 
-          fill="none" 
-          xmlns="http://www.w3.org/2000/svg" 
-          aria-hidden="true"
-          focusable="false"
-          role="presentation"
-        >
-          <path 
-            d="m5 5 14 14M19 5 5 19" 
-            stroke="currentColor" 
-            strokeWidth="2" 
-            strokeLinecap="round" 
-            strokeLinejoin="bevel"
-          />
-        </svg>
-      </button>
-          {/* <X 
-            className="cursor-pointer hoveer:text-gray-600"
             onClick={onClose}
-          /> */}
+            aria-label="Close"
+            className="absolute w-10 h-10 rounded-full bg-neutral-100 flex items-center justify-center cursor-pointer p-0 z-[2] top-[12px] right-[12px]"
+          >
+            <svg 
+              width="1em" 
+              height="1em" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              xmlns="http://www.w3.org/2000/svg" 
+              aria-hidden="true"
+              focusable="false"
+              role="presentation"
+            >
+              <path 
+                d="m5 5 14 14M19 5 5 19" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="bevel"
+              />
+            </svg>
+          </button>
         </h3>
         <ul className="space-y-4 overflow-y-scroll max-h-[92%] no-scrollbar">
           {uniqueItems.map((item) => (
@@ -158,7 +147,7 @@ const BudgetCalculator: React.FC<BudgetCalculatorProps> = ({
         </ul>
       </div>
       <div className="mt-4 border-t border-gray-200 pt-4 bg-white sticky bottom-0">
-        <div className="flex flex-col justify-between  ">
+        <div className="flex flex-col justify-between">
           <div className="flex justify-between items-center mb-4">
             <strong className="text-lg">Total</strong>
             <span className="text-lg font-semibold">LKR {total.toLocaleString()}</span>

@@ -3,12 +3,13 @@ import { LibraryItems } from "./LibraryItems";
 import LibraryImages from "./LibraryImages";
 
 export interface LibraryItem {
-  x:  number;
+  x: number;
   y: number;
   instanceId: string;
   id: string;
   name: string;
   svg: string; // Path or SVG string for the image/icon
+  price: number; // Added price field
 }
 
 function ComponentPanel() {
