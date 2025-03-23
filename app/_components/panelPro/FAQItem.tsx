@@ -1,14 +1,33 @@
-import React from "react";
+import { useState } from 'react';
 
 interface FAQItemProps {
   question: string;
+  answer: string;
 }
 
-export function FAQItem({ question }: FAQItemProps): JSX.Element {
+const FAQItem: React.FC<FAQItemProps> = ({ question, answer }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <div className="flex justify-between pb-6 mt-6 w-full text-lg font-medium text-black border-b border-solid border-zinc-300">
-      <div>{question}</div>
-      <div className="flex gap-2.5 self-start text-cyan-800">+</div>
+    <div className="w-full border-b border-gray-200 py-4">
+      <button 
+        className="flex justify-between items-center w-full text-left focus:outline-none"
+        onClick={() => setIsOpen(!isOpen)}
+        aria-expanded={isOpen}
+      >
+        <span className="text-lg font-medium text-neutral-700">{question}</span>
+        <span className="text-[#7cbba8] text-xl transform transition-transform duration-300" style={{ transform: isOpen ? 'rotate(90deg)' : 'rotate(0deg)' }}>
+  &gt;
+</span>
+      </button>
+      
+      {isOpen && (
+        <div className="mt-3 text-gray-600 animate-fadeIn">
+          <p>{answer}</p>
+        </div>
+      )}
     </div>
   );
-}
+};
+
+export default FAQItem;
