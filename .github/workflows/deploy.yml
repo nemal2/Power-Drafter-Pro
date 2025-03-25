@@ -47,5 +47,5 @@ jobs:
           docker rm nextjs-app || true
           docker pull nemal2/nextjs-app:latest
           docker run -d --name nextjs-app -p 3000:3000 \
-            --env-file .env nemal2/nextjs-app:latest
+            --env-file .env.local nemal2/nextjs-app:latest
           EOF
