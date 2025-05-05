@@ -1,11 +1,18 @@
-import * as React from "react";
-import { SocialIconProps } from "./types";
+import React from "react";
 
-export const SocialIcon: React.FC<SocialIconProps> = ({ src, alt }) => (
-  <img
-    loading="lazy"
-    src={src}
-    alt={alt}
-    className="object-contain shrink-0 aspect-square w-[18px]"
-  />
-);
+interface SocialIconProps {
+  src: string;
+  alt: string;
+}
+
+export function SocialIcon({ src, alt }: SocialIconProps): JSX.Element {
+  return (
+    <div className="flex gap-2.5 justify-center items-center self-start">
+      <img
+        loading="lazy"
+        src={src}
+        alt={alt}
+        className="flex items-center justify-center w-8 h-8 md:w-10"        />
+    </div>
+  );
+}

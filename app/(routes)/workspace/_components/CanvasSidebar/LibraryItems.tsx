@@ -13,45 +13,45 @@ export interface LibraryItem {
 export const LibraryItems: LibraryItem[] = [
   {
     id: "1",
-    name: "Resistor",
-    svg: "/components/a1.png",
+    name: "Breaker",
+    svg: "/components/22.png",
     price: 50.00
   },
   {
     id: "2",
-    name: "Capacitor",
-    svg: "/components/a2.png",
+    name: "Breaker2",
+    svg: "/components/223.png",
     price: 75.00
   },
   {
     id: "3",
-    name: "Switch",
-    svg: "/components/a3.png",
+    name: "Breaker4",
+    svg: "/components/switch disconnector-4.png",
     price: 120.00
   },
   {
     id: "4",
-    name: "Breaker",
-    svg: "/components/a1.png",
+    name: "OVR T2",
+    svg: "/components/OVR T2 2L.png",
     price: 200.00
   }
   ,
   {
     id: "5",
     name: "Breaker-2",
-    svg: "/components/a1.png",
+    svg: "/components/22.png",
     price: 200.00
   },
   {
     id: "6",
     name: "Switch-2",
-    svg: "/components/a3.png",
+    svg: "/components/22.png",
     price: 120.00
   },
   {
     id: "7",
     name: "Breaker-2",
-    svg: "/components/a1.png",
+    svg: "/components/223.png",
     price: 200.00
   }
   
