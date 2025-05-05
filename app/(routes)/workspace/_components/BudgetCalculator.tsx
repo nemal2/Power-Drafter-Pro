@@ -91,7 +91,7 @@ const BudgetCalculator: React.FC<BudgetCalculatorProps> = ({
       <div >
         <h3 className="text-base font-semibold mb-4 flex justify-between items-center">
           
-         <span>Components List</span>
+         <span>Component List</span>
           <button 
         onClick={onClose}
         aria-label="Close"
