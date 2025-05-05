@@ -18,12 +18,6 @@ interface CanvasComponent extends LibraryItem {
   x: number;
   y: number;
   instanceId: string;
-  rotation?: number;
-}
-
-// Interface for the expected shape in the API
-interface SavedCanvasComponent extends Omit<CanvasComponent, 'price'> {
-  price: number;  // Non-optional price for API
 }
 
 interface HistoryAction {
@@ -33,12 +27,7 @@ interface HistoryAction {
   previousState?: CanvasComponent[];
 }
 
-interface BudgetItem {
-  id: string;
-  name: string;
-  quantity: number;
-  price: number;
-}
+
 
 const Workspace: React.FC<{ params: { fileId: string } }> = ({ params }) => {
   const convex = useConvex();
@@ -53,37 +42,38 @@ const Workspace: React.FC<{ params: { fileId: string } }> = ({ params }) => {
     setShowBudgetCalculator(prev => !prev);
   }, []);
 
-  // History states with action type
-  const [history, setHistory] = useState<HistoryAction[]>([]);
-  const [currentStep, setCurrentStep] = useState(-1);
+ // History states with action type
+ const [history, setHistory] = useState<HistoryAction[]>([]);
+ const [currentStep, setCurrentStep] = useState(-1);
 
-  useEffect(() => {
-    const loadState = async () => {
-      try {
-        setLoading(true);
-        const state = await convex.query(api.files.getFileById, {
-          fileId: params.fileId as Id<"files">
-        });
-        
-        if (state?.canvasComponents?.length) {
-          setComponents(state.canvasComponents);
-          setHistory([{ type: 'add', components: state.canvasComponents }]);
-          setCurrentStep(0);
-        }
-      } catch (error) {
-        console.error("Error loading state:", error);
-        toast.error("Failed to load workspace");
-      } finally {
-        setLoading(false);
+
+ useEffect(() => {
+  const loadState = async () => {
+    try {
+      setLoading(true);
+      const state = await convex.query(api.files.getFileById, {
+        fileId: params.fileId as Id<"files">
+      });
+      
+      if (state?.canvasComponents?.length > 0) {
+        setComponents(state.canvasComponents);
+        setHistory([{ type: 'add', components: state.canvasComponents }]);
+        setCurrentStep(0);
       }
-    };
+    } catch (error) {
+      console.error("Error loading state:", error);
+      toast.error("Failed to load workspace");
+    } finally {
+      setLoading(false);
+    }
+  };
 
     if (params.fileId) {
       loadState();
     }
   }, [convex, params.fileId]);
 
-  const addToHistory = useCallback((newComponents: CanvasComponent[], actionType: string, componentId?: string) => {
+   const addToHistory = useCallback((newComponents: CanvasComponent[], actionType: string, componentId?: string) => {
     const previousState = components;
     setHistory(prev => [...prev.slice(0, currentStep + 1), {
       type: actionType as 'add' | 'remove' | 'move' | 'quantity' | 'reset',
@@ -95,29 +85,24 @@ const Workspace: React.FC<{ params: { fileId: string } }> = ({ params }) => {
     setComponents(newComponents);
   }, [currentStep, components]);
 
-  const handleComponentAdd = useCallback((component: LibraryItem, actionType: string = 'add') => {
-    const canvasComponent: CanvasComponent = {
-      ...component,
-      x: component.x ?? Math.random() * 500 + 50,
-      y: component.y ?? Math.random() * 300 + 50,
-      instanceId: component.instanceId ?? `${component.id}-${Date.now()}-${Math.random()}`
-    };
-    
+
+  const handleComponentAdd = useCallback((component: CanvasComponent, actionType: string) => {
     setComponents(prev => {
-      const existingIndex = prev.findIndex(comp => comp.instanceId === canvasComponent.instanceId);
+      const existingIndex = prev.findIndex(comp => comp.instanceId === component.instanceId);
       let newComponents;
       
       if (existingIndex !== -1) {
         newComponents = [...prev];
-        newComponents[existingIndex] = canvasComponent;
+        newComponents[existingIndex] = component;
       } else {
-        newComponents = [...prev, canvasComponent];
+        newComponents = [...prev, component];
       }
       
-      addToHistory(newComponents, actionType, canvasComponent.instanceId);
+      addToHistory(newComponents, actionType, component.instanceId);
       return newComponents;
     });
   }, [addToHistory]);
+
 
   const handleComponentDelete = useCallback((instanceId: string) => {
     setComponents(prev => {
@@ -127,7 +112,8 @@ const Workspace: React.FC<{ params: { fileId: string } }> = ({ params }) => {
     });
   }, [addToHistory]);
 
-  const handleUpdateQuantity = useCallback((id: string, newQuantity: number) => {
+
+   const handleUpdateQuantity = useCallback((id: string, newQuantity: number) => {
     setComponents(prev => {
       const currentComponents = prev.filter(comp => comp.id === id);
       const otherComponents = prev.filter(comp => comp.id !== id);
@@ -153,6 +139,7 @@ const Workspace: React.FC<{ params: { fileId: string } }> = ({ params }) => {
       return newComponents;
     });
   }, [addToHistory]);
+
 
   const handleRemoveItem = useCallback((id: string) => {
     setComponents(prev => {
@@ -184,11 +171,13 @@ const Workspace: React.FC<{ params: { fileId: string } }> = ({ params }) => {
     }
   }, [addToHistory, components.length]);
 
+
+
   const handleSave = async () => {
     try {
       setSaving(true);
       const budget = {
-        total: components.reduce((sum, item) => sum + (item.price || 0), 0),
+        total: components.reduce((sum, item) => sum + item.price, 0),
         items: Array.from(
           components.reduce((map, item) => {
             const existing = map.get(item.id);
@@ -199,20 +188,19 @@ const Workspace: React.FC<{ params: { fileId: string } }> = ({ params }) => {
                 id: item.id,
                 name: item.name,
                 quantity: 1,
-                price: item.price || 0
-              } as BudgetItem);
+                price: item.price
+              });
             }
             return map;
-          }, new Map<string, BudgetItem>())
+          }, new Map())
         ).map(([_, item]) => item)
       };
   
-      // Ensure all components have a rotation value AND a price value
+      // Ensure all components have a rotation value
       const componentsWithRotation = components.map(comp => ({
         ...comp,
-        rotation: comp.rotation ?? 0.0,
-        price: comp.price ?? 0
-      })) as SavedCanvasComponent[];
+        rotation: comp.rotation ?? 0.0
+      }));
   
       await convex.mutation(api.files.saveCanvasState, {
         fileId: params.fileId as Id<"files">,
@@ -229,6 +217,7 @@ const Workspace: React.FC<{ params: { fileId: string } }> = ({ params }) => {
     }
   };
   
+
   return (
     <div>
       <WorkspaceHeader 

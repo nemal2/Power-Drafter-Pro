@@ -1,8 +1,10 @@
 // CanvasSidebar/index.tsx
 import React, { useState } from "react";
-import { LayoutGrid, Cpu, FolderPlus, Text, Package, List } from "lucide-react";
+import { LayoutGrid, Cpu, FolderPlus, Text, Package, List,KeyRound } from "lucide-react";
 import { LibraryItems, LibraryItem, LibraryItemComponent } from "./LibraryItems";
 import ComponentCatalog from "./Catalog";
+import AdminPrivileges from "./AdminPrivileges";
+
 
 import {
   Tooltip,
@@ -20,6 +22,8 @@ function CanvasSidebar({
 }) {
   const [activePanel, setActivePanel] = useState<string | null>("components");
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
+  const [isAdminOpen, setIsAdminOpen] = useState(false);
+
   const [sidebarItems, setSidebarItems] = useState<LibraryItem[]>(LibraryItems);
 
   const togglePanel = (panelName: string) => {
@@ -110,13 +114,27 @@ function CanvasSidebar({
               <p>Budget Calculator</p>
             </TooltipContent>
           </Tooltip>
+{/* modify the bel */}
+           {/* Admin Privileges Button */}
+           <Tooltip>
+            <TooltipTrigger>
+              <KeyRound
+                className="text-2xl cursor-pointer hover:text-gray-700 mt-56"
+                onClick={() => setIsAdminOpen(true)} // Set state to open the AdminPrivileges dialog
+              />
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Admin Privileges</p>
+            </TooltipContent>
+          </Tooltip>
+
         </TooltipProvider>
       </div>
 
-      {/* Sidebar Component Panel */}
-      <div className="border-r shadow bg-slate-50 radius">
+    {/* Sidebar Component Panel */}
+    <div className="border-r shadow bg-slate-50 radius">
         {activePanel === "components" && (
-          <div className="grid grid-cols-2 gap-4 w-60 p-2  ">
+          <div className="grid grid-cols-2 gap-4 w-60 p-2">
             {sidebarItems.map((item) => (
               <LibraryItemComponent
                 key={item.id}
@@ -134,6 +152,9 @@ function CanvasSidebar({
         onClose={() => setIsCatalogOpen(false)}
         onSelectComponent={handleComponentSelect}
       />
+
+      {/* Admin Privileges Dialog */}
+      <AdminPrivileges isOpen={isAdminOpen} onClose={() => setIsAdminOpen(false)} />
     </div>
   );
 }

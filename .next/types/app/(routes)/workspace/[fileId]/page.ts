@@ -1,4 +1,4 @@
-// File: D:\Semester 6\Software Project\Power Drafter\power_drafter\app\(routes)\workspace\[fileId]\page.tsx
+// File: E:\Panel Pro new\may5\Power-Drafter-Pro\app\(routes)\workspace\[fileId]\page.tsx
 import * as entry from '../../../../../../app/(routes)/workspace/[fileId]/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

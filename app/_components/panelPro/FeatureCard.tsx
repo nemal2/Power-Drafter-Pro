@@ -1,31 +1,21 @@
-import * as React from "react";
-// import { FeatureCardProps } from "./types";
+import React from "react";
 
-// Ensure icon is a valid React element
 interface FeatureCardProps {
-  icon: React.ReactNode;
   title: string;
+  icon: React.ReactNode;
   description: string;
 }
 
-export const FeatureCard: React.FC<FeatureCardProps> = ({
-  icon,
-  title,
-  description,
-}) => (
-  <div className="flex flex-col self-stretch my-auto rounded-none min-w-[240px] w-[300px]">
-    <div className="flex flex-col items-center px-8 py-10 bg-white rounded-[30px] shadow-[4px_10px_30px_rgba(0,0,0,0.03)] max-md:px-5">
-      <div className="flex shrink-0 w-16 h-16 rounded-full bg-[linear-gradient(180deg,#7CBBA8_0%,#B5D5C0_100%)]" >
-        <div className="flex items-center justify-center w-full h-full scale-150 text-white">
-          {icon}
-        </div>
-      </div>
-      
-        
-      <div className="mt-6 text-lg font-medium text-slate-800">{title}</div>
-      <div className="self-stretch mt-6 text-base leading-7 text-zinc-500">
-        {description}
+export function FeatureCard({ title, icon, description }: FeatureCardProps): JSX.Element {
+  return (
+    <div className="flex flex-col grow shrink-0 basis-0 max-w-full w-96 bg-[#F7F7F7] transition-all duration-300 ease-in-out hover:-translate-y-1">
+      <div className="flex flex-col items-center bg-white py-6 rounded-xl px-4 text-center">
+        <div className="flex gap-2.5 text-3xl text-cyan-800 justify-center">{icon}</div>
+        <h3 className="mt-2.5 text-xl font-semibold">{title}</h3>
+        <p className="mt-2.5 text-base leading-6 text-slate-500 max-w-[250px]">
+          {description}
+        </p>
       </div>
     </div>
-  </div>
-);
+  );
+}

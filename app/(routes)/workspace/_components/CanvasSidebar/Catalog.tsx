@@ -1,12 +1,7 @@
-// CanvasSidebar/Catalog.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Search, Package, ChevronDown, ChevronUp } from 'lucide-react';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { categories, components } from './componentsList';
 
 interface ComponentCatalogProps {
   isOpen: boolean;
@@ -14,77 +9,26 @@ interface ComponentCatalogProps {
   onSelectComponent: (component: LibraryItem) => void;
 }
 
-const ComponentCatalog: React.FC<ComponentCatalogProps> = ({
-  isOpen,
-  onClose,
-  onSelectComponent,
-}) => {
+const ComponentCatalog: React.FC<ComponentCatalogProps> = ({ isOpen, onClose, onSelectComponent }) => {
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedSpecs, setExpandedSpecs] = useState<Record<string, boolean>>({});
   const [selectedSpecs, setSelectedSpecs] = useState<Record<string, Record<string, string>>>({});
 
-  // Categories and components data remain the same as in your original code
-  const categories = {
-    all: 'All Components',
-    passive: 'Passive Components',
-    active: 'Active Components',
-    protection: 'Protection Devices',
-    connectors: 'Connectors'
-  };
-
-  const components = {
-    passive: [
-      {
-        id: '1',
-        name: 'Resistor',
-        svg: '/components/a1.png',
-        price: 50.00,
-        specs: {
-          resistance: ['10Ω', '100Ω', '1kΩ', '10kΩ'],
-          power: ['1/4W', '1/2W', '1W'],
-          tolerance: ['±1%', '±5%']
-          
-        },
-        description: 'Standard through-hole resistor for general-purpose applications'
-      },
-      {
-        id: '2',
-        name: 'Resistor2',
-        svg: '/components/a1.png',
-        price: 500.00,
-        specs: {
-          resistance: ['10Ω', '100Ω', '1kΩ', '10kΩ'],
-          power: ['1/4W', '1/2W', '1W'],
-          tolerance: ['±1%', '±5%']
-          
-        },
-        description: 'Standard through hole resistor for general-purpose applications'
-      },
-      // ... other passive components
-    ],
-    active: [
-      // ... active components
-    ],
-    protection: [
-      // ... protection components
-    ]
-  };
-
   const handleSpecSelect = (componentId: string, specType: string, value: string) => {
-    setSelectedSpecs(prev => ({
+    setSelectedSpecs((prev) => ({
       ...prev,
       [componentId]: {
         ...(prev[componentId] || {}),
-        [specType]: value
-      }
+        [specType]: value,
+      },
     }));
   };
 
   const handleAddToSidebar = (component: any) => {
     const specs = selectedSpecs[component.id];
     const updatedPrice = calculatePrice(component, specs);
-    
+
     onSelectComponent({
       ...component,
       selectedSpecs: specs,
@@ -101,16 +45,17 @@ const ComponentCatalog: React.FC<ComponentCatalogProps> = ({
 
   const filteredComponents = Object.entries(components).flatMap(([category, items]) => {
     if (activeCategory !== 'all' && activeCategory !== category) return [];
-    return items.filter(item => 
-      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.description.toLowerCase().includes(searchQuery.toLowerCase())
+    return items.filter(
+      (item) =>
+        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.description.toLowerCase().includes(searchQuery.toLowerCase())
     );
   });
 
   const toggleSpecs = (componentId: string) => {
-    setExpandedSpecs(prev => ({
+    setExpandedSpecs((prev) => ({
       ...prev,
-      [componentId]: !prev[componentId]
+      [componentId]: !prev[componentId],
     }));
   };
 
@@ -123,9 +68,6 @@ const ComponentCatalog: React.FC<ComponentCatalogProps> = ({
               <Package className="w-6 h-6" />
               <span>Component Catalog</span>
             </div>
-            {/* <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full">
-              <X className="w-5 h-5" />
-            </button> */}
           </DialogTitle>
         </DialogHeader>
 
@@ -137,9 +79,7 @@ const ComponentCatalog: React.FC<ComponentCatalogProps> = ({
                 key={key}
                 onClick={() => setActiveCategory(key)}
                 className={`w-full text-left px-4 py-2 rounded ${
-                  activeCategory === key
-                    ? 'bg-blue-100 text-blue-700'
-                    : 'hover:bg-gray-100'
+                  activeCategory === key ? 'bg-blue-100 text-blue-700' : 'hover:bg-gray-100'
                 }`}
               >
                 {label}
@@ -207,9 +147,7 @@ const ComponentCatalog: React.FC<ComponentCatalogProps> = ({
                     <div className="mt-2 space-y-2">
                       {Object.entries(component.specs).map(([key, values]) => (
                         <div key={key} className="space-y-1">
-                          <label className="text-sm font-medium capitalize">
-                            {key}:
-                          </label>
+                          <label className="text-sm font-medium capitalize">{key}:</label>
                           <div className="flex flex-wrap gap-2">
                             {values.map((value) => (
                               <button
@@ -227,8 +165,6 @@ const ComponentCatalog: React.FC<ComponentCatalogProps> = ({
                           </div>
                         </div>
                       ))}
-                      
-                      {/* Add to Sidebar button */}
                       <button
                         onClick={() => handleAddToSidebar(component)}
                         className="w-full mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"

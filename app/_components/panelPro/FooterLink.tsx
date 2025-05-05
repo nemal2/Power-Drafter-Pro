@@ -1,8 +1,18 @@
-import * as React from "react";
-import { FooterLinkProps } from "./types";
+import React from "react";
 
-export const FooterLink: React.FC<FooterLinkProps> = ({ text }) => (
-  <div className="mt-4 text-base tracking-wide leading-relaxed text-white text-opacity-70">
-    {text}
-  </div>
-);
+interface FooterLinkProps {
+  text: string;
+}
+
+export function FooterLink({ text }: FooterLinkProps): JSX.Element {
+  return (
+    <div className="flex flex-col mt-3 md:mt-5">
+      <a 
+        href="#" 
+        className="text-sm md:text-base tracking-wide text-white text-opacity-60 hover:text-opacity-100 transition-colors duration-300"
+      >
+        {text}
+      </a>
+    </div>
+  );
+}

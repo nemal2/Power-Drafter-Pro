@@ -1,67 +1,60 @@
-import * as React from "react";
-import { PricingTierProps } from "./types";
+import React from 'react';
 
-export const PricingTier: React.FC<PricingTierProps> = ({
-  name,
-  features,
-  price,
-  buttonText,
-  isHighlighted,
-  savingsText,
-}) => (
-  <div className="flex flex-col w-[33%] max-md:ml-0 max-md:w-full">
-    <div
-      className={`flex flex-col items-start px-7 py-6 mx-auto w-full rounded-3xl shadow-lg max-md:px-5 max-md:mt-10 ${
-        isHighlighted ? "bg-cyan-800" : "bg-white"
-      }`}
-    >
-      <div className="flex gap-5 justify-between self-stretch w-full font-bold">
-        <div
-          className={`text-2xl ${isHighlighted ? "text-white" : "text-black"}`}
-        >
-          {name}
+interface PricingTierProps {
+  name: string;
+  price: string;
+  description: string;
+  features: string[];
+  isPopular?: boolean;
+}
+
+export const PricingTier: React.FC<PricingTierProps> = ({ 
+  name, 
+  price, 
+  description, 
+  features, 
+  isPopular = false 
+}) => {
+  return (
+    <div className={`flex flex-col p-5 md:p-6 lg:p-8 w-full rounded-xl shadow-md ${
+      isPopular ? 'bg-gradient-to-b from-[#7cbbA8] to-[#b5d5c0] text-white' : 'bg-white text-black'
+    }`}>
+      <div className="flex flex-col">
+        <div className="flex justify-between items-center mb-3 md:mb-4">
+          <h3 className="text-lg md:text-xl lg:text-2xl font-bold">{name}</h3>
+          {isPopular && (
+            <span className="px-2 py-0.5 md:px-3 md:py-1 text-xs font-medium bg-white text-cyan-800 rounded-full">
+              Popular
+            </span>
+          )}
         </div>
-        {savingsText && (
-          <div className="overflow-hidden gap-2.5 self-start px-2 py-1.5 text-xs text-violet-600 bg-white rounded">
-            {savingsText}
-          </div>
-        )}
+        <div className="text-xl md:text-2xl lg:text-3xl font-bold mb-1 md:mb-2">{price}</div>
+        <p className="text-xs md:text-sm lg:text-base mb-4 md:mb-6 opacity-80">{description}</p>
       </div>
-      {features.map((feature, index) => (
-        <div
-          key={index}
-          className={`flex gap-4 mt-${index === 0 ? "6" : "4"} text-base ${
-            isHighlighted ? "text-white" : "text-black"
-          }`}
-        >
-          <img
-            loading="lazy"
-            src="https://cdn.builder.io/api/v1/image/assets/TEMP/fc3b40192ea2f34f72a01c4751c50c19f9aecfad90387c59cdaee5c74225df16?placeholderIfAbsent=true&apiKey=29a73afb14654dba9949ec01adec667c"
-            alt=""
-            className="object-contain shrink-0 self-start w-5 rounded-none aspect-[1.25]"
-          />
-          <div>{feature}</div>
-        </div>
-      ))}
-      <div
-        className={`flex overflow-hidden gap-1 items-end mt-6 ${
-          isHighlighted ? "text-white" : "text-black"
-        }`}
-      >
-        <div className="text-2xl font-bold">
-          <span className="text-lg">${price}</span>
-        </div>
-        <div className="text-base">/month</div>
-      </div>
-      <button
-        className={`self-stretch px-16 py-4 mt-4 text-base font-bold text-center rounded-lg max-md:px-5 ${
-          isHighlighted
-            ? "bg-slate-400 text-white"
-            : "bg-green-100 text-slate-400"
-        }`}
-      >
-        {buttonText}
+      
+      <ul className="flex flex-col gap-2 md:gap-3 mb-6 md:mb-8">
+        {features.map((feature, index) => (
+          <li key={index} className="flex items-center gap-2 text-xs md:text-sm lg:text-base">
+            <svg 
+              className={`w-4 h-4 md:w-5 md:h-5 ${isPopular ? 'text-white' : 'text-cyan-800'}`} 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+            </svg>
+            {feature}
+          </li>
+        ))}
+      </ul>
+      
+      <button className={`mt-auto py-2 md:py-3 px-4 md:px-6 rounded-[50px] text-sm md:text-base font-medium transition-all duration-300 ${
+        isPopular 
+          ? 'bg-white text-cyan-800 hover:bg-gray-100 hover:shadow-lg' 
+          : 'bg-cyan-800 text-white hover:bg-cyan-700 hover:shadow-lg'
+      }`}>
+        Get Started
       </button>
     </div>
-  </div>
-);
+  );
+};

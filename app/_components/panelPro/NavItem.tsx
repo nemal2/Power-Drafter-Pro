@@ -1,6 +1,26 @@
-import * as React from "react";
-import { NavItemProps } from "./types";
+import React from 'react';
 
-export const NavItem: React.FC<NavItemProps> = ({ text }) => (
-  <div className="self-stretch my-auto">{text}</div>
-);
+interface NavItemProps {
+  text: string;
+  sectionId: string;
+}
+
+export const NavItem: React.FC<NavItemProps> = ({ text, sectionId }) => {
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  return (
+    <a
+      href={`#${sectionId}`}
+      onClick={handleClick}
+      className="text-base md:text-lg text-black hover:text-cyan-700 transition-colors duration-300"
+    >
+      {text}
+    </a>
+  );
+};
