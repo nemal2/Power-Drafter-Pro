@@ -1,4 +1,4 @@
-// File: E:\Panel Pro new\may5\Power-Drafter-Pro\app\layout.tsx
+// File: E:\6_semester\software_project\sprint_6\final\1\Power-Drafter-Pro\app\layout.tsx
 import * as entry from '../../../app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

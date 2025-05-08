@@ -4,9 +4,9 @@ import CatalogAdmin from "./CatalogAdmin"; // Adjust the import path as needed
 
 // Define the types for the props
 interface AdminPrivilegesProps {
-    
   isOpen: boolean;
   onClose: () => void;
+  onComponentSave?: (componentData: any) => void; // Add this prop to handle new components
 }
 
 // Import the LibraryItem type or define it here if not already imported
@@ -18,9 +18,11 @@ interface LibraryItem {
   price: number;
   specs: Record<string, string[]>;
   selectedSpecs?: Record<string, string>;
+  width?: number;
+  height?: number;
 }
 
-const AdminPrivileges: React.FC<AdminPrivilegesProps> = ({ isOpen, onClose }) => {
+const AdminPrivileges: React.FC<AdminPrivilegesProps> = ({ isOpen, onClose, onComponentSave }) => {
   const [passkey, setPasskey] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [error, setError] = useState("");
@@ -55,13 +57,24 @@ const AdminPrivileges: React.FC<AdminPrivilegesProps> = ({ isOpen, onClose }) =>
     // You might want to do something with the selected component
   };
 
+  // Handle saving a new component from CatalogAdmin
+  const handleSaveComponent = (componentData: any) => {
+    if (onComponentSave) {
+      onComponentSave(componentData);
+    }
+    
+    // Close the catalog admin panel and show success message
+    setShowCatalogAdmin(false);
+  };
+
   // If showing catalog admin, render that
   if (isAuthenticated && showCatalogAdmin) {
     return (
       <CatalogAdmin 
         isOpen={true} 
         onClose={() => setShowCatalogAdmin(false)} 
-        onSelectComponent={handleSelectComponent} 
+        onSelectComponent={handleSelectComponent}
+        onSaveComponent={handleSaveComponent} // Pass the save handler to CatalogAdmin
       />
     );
   }

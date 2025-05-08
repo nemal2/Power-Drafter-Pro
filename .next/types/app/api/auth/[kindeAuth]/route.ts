@@ -1,4 +1,4 @@
-// File: E:\Panel Pro new\may5\Power-Drafter-Pro\app\api\auth\[kindeAuth]\route.js
+// File: E:\6_semester\software_project\sprint_6\final\1\Power-Drafter-Pro\app\api\auth\[kindeAuth]\route.js
 import * as entry from '../../../../../../app/api/auth/[kindeAuth]/route.js'
 import type { NextRequest } from 'next/server.js'
 
