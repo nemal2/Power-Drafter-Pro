@@ -49,11 +49,11 @@ export const LibraryItems: LibraryItem[] = [
   },
   {
     id: "3",
-    name: "Breaker4",
-    svg: "/components/switch disconnector-4.png",
-    price: 120.00,
-    width: 150,
-    height: 150,
+    name: "Breaker3",
+    svg: "/components/switch4.png",
+    price: 100.00,
+    width: 140,
+    height: 140,
     specs: {
       power: ["default"],
       resistance: ["default"],

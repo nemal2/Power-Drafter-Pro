@@ -1,90 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { X, Search, Package, ChevronDown, ChevronUp } from 'lucide-react';
+import { Search, Package, ChevronDown, ChevronUp } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { categories } from './AddComponentDialog';
-import { LibraryItem } from './LibraryItems';
+import { categories, components, loadCustomComponents } from './componentsList';
+
+// Type for LibraryItem to match what is expected by onSelectComponent
+export interface LibraryItem {
+  id: string;
+  name: string;
+  description?: string;
+  svg: string;
+  price: number;
+  width: number;
+  height: number;
+  specs: Record<string, string[]>;
+  selectedSpecs?: Record<string, string>;
+}
 
 interface ComponentCatalogProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectComponent: (component: LibraryItem) => void;
 }
-
-// Define initial built-in components based on categories
-const initialComponents = {
-  passive: [
-    {
-    id: "1",
-    name: "Breaker",
-    svg: "/components/22.png",
-    price: 50.00,
-    width: 100,
-    height: 100,
-    specs: {
-      power: ["default"],
-      resistance: ["default"],
-      tolerance: ["default"]
-    }
-  },
-  {
-    id: "2",
-    name: "Breaker2",
-    svg: "/components/223.png",
-    price: 75.00,
-    width: 120,
-    height: 120,
-    specs: {
-      power: ["default"],
-      resistance: ["default"],
-      tolerance: ["default"]
-    }
-  }
-    // ... other passive components
-  ],
-  active: [
-    {
-    id: "1",
-    name: "TBreaker",
-    svg: "/components/22.png",
-    price: 50.00,
-    width: 100,
-    height: 100,
-    specs: {
-      power: ["default"],
-      resistance: ["default"],
-      tolerance: ["default"]
-    }
-  },
-  {
-    id: "2",
-    name: "TBreaker2",
-    svg: "/components/223.png",
-    price: 75.00,
-    width: 120,
-    height: 120,
-    specs: {
-      power: ["default"],
-      resistance: ["default"],
-      tolerance: ["default"]
-    }
-  }
-  ],
-  protection: [
-    {
-    id: "4",
-    name: "OVR T2",
-    svg: "/components/OVR.png",
-    price: 200.00,
-    width: 70,
-    height: 80,
-    specs: {
-      power: ["default"],
-      resistance: ["default"],
-      tolerance: ["default"]
-    }
-  }
-  ]
-};
 
 const ComponentCatalog: React.FC<ComponentCatalogProps> = ({ isOpen, onClose, onSelectComponent }) => {
   const [activeCategory, setActiveCategory] = useState('all');
@@ -96,17 +32,8 @@ const ComponentCatalog: React.FC<ComponentCatalogProps> = ({ isOpen, onClose, on
   // Load custom components when the component mounts or when isOpen changes
   useEffect(() => {
     if (isOpen) {
-      try {
-        const storedComponents = localStorage.getItem('catalog_custom_components');
-        if (storedComponents) {
-          setCustomComponents(JSON.parse(storedComponents));
-        } else {
-          setCustomComponents([]);
-        }
-      } catch (error) {
-        console.error("Error loading custom components:", error);
-        setCustomComponents([]);
-      }
+      const loadedComponents = loadCustomComponents();
+      setCustomComponents(loadedComponents);
     }
   }, [isOpen]);
 
@@ -128,8 +55,6 @@ const ComponentCatalog: React.FC<ComponentCatalogProps> = ({ isOpen, onClose, on
       ...component,
       selectedSpecs: specs,
       price: updatedPrice,
-      width: component.width || 100,
-      height: component.height || 100
     });
     
     onClose(); // Close the catalog after adding component
@@ -142,7 +67,7 @@ const ComponentCatalog: React.FC<ComponentCatalogProps> = ({ isOpen, onClose, on
     
     // Apply adjustments based on selected specs
     // This is simplified - in a real app you'd have more complex price calculations
-    Object.entries(specs).forEach(([key, value]) => {
+    Object.entries(specs || {}).forEach(([key, value]) => {
       if (key === 'power' && value === '1W') basePrice *= 1.5;
       if (key === 'tolerance' && value === '±1%') basePrice *= 1.2;
       if (key === 'current' && value === '20A') basePrice *= 1.3;
@@ -155,7 +80,7 @@ const ComponentCatalog: React.FC<ComponentCatalogProps> = ({ isOpen, onClose, on
   // Combine built-in components and custom components
   const allComponents = [
     // Add built-in components from the appropriate category or all categories
-    ...Object.entries(initialComponents).flatMap(([category, items]) => {
+    ...Object.entries(components).flatMap(([category, items]) => {
       if (activeCategory !== 'all' && activeCategory !== category) return [];
       return items;
     })

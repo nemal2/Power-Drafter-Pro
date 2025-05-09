@@ -40,13 +40,13 @@ export const components = {
       id: 'breaker-4',
       name: 'Breaker4',
       description: 'Heavy duty circuit breaker',
-      svg: '/components/switch disconnector-4.png',
+      svg: '/components/switch4.png',
       price: 120.00,
       width: 150,
       height: 150,
       specs: {
         'power': ['5W', '10W', '15W'],
-        'current': ['40A', '50A', '60A'],
+       
         'tolerance': ['±1%']
       }
     }
@@ -62,7 +62,7 @@ export const components = {
       height: 120,
       specs: {
         'power': ['1W', '2W', '5W'],
-        'voltage': ['110V', '220V', '380V'],
+  
         'tolerance': ['±2%', '±1%']
       }
     },
@@ -76,7 +76,7 @@ export const components = {
       height: 100,
       specs: {
         'power': ['0.5W', '1W', '2W'],
-        'voltage': ['110V', '220V'],
+        
         'tolerance': ['±5%', '±2%']
       }
     },
@@ -89,9 +89,8 @@ export const components = {
       width: 80,
       height: 80,
       specs: {
-        'power': ['0.25W', '0.5W', '1W'],
-        'voltage': ['24V', '48V', '110V'],
-        'tolerance': ['±5%']
+        power: ['0.25W', '0.5W', '1W'],
+      tolerance: ['±5%', '±2%', '±1%']
       }
     }
   ],
@@ -105,10 +104,31 @@ export const components = {
       width: 150,
       height: 100,
       specs: {
-        'power': ['1W', '2W'],
-        'connectivity': ['Wired', 'Wireless'],
-        'protocol': ['I2C', 'SPI', 'UART']
+        power: ['0.25W', '0.5W', '1W'],
+      tolerance: ['±5%', '±2%', '±1%']
       }
     }
   ]
+};
+
+
+// Helper function to get all components regardless of category
+export const getAllComponents = () => {
+  return Object.values(components).flat();
+};
+
+// Helper function to save custom components to localStorage
+export const saveCustomComponents = (customComponents) => {
+  localStorage.setItem('catalog_custom_components', JSON.stringify(customComponents));
+};
+
+// Helper function to load custom components from localStorage
+export const loadCustomComponents = () => {
+  try {
+    const storedComponents = localStorage.getItem('catalog_custom_components');
+    return storedComponents ? JSON.parse(storedComponents) : [];
+  } catch (error) {
+    console.error("Error loading custom components:", error);
+    return [];
+  }
 };
