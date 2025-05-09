@@ -72,19 +72,6 @@ export const LibraryItems: LibraryItem[] = [
       resistance: ["default"],
       tolerance: ["default"]
     }
-  },
-  {
-    id: "5",
-    name: "Board sm",
-    svg: "/components/board.png",
-    price: 400.00,
-    width: 600,
-    height: 200,
-    specs: {
-      power: ["default"],
-      resistance: ["default"],
-      tolerance: ["default"]
-    }
   }
    
 ];
