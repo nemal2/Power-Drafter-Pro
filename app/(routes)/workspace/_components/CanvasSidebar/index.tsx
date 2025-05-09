@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { LayoutGrid, Cpu, FolderPlus, Text, Package, List, KeyRound, Trash2, X } from "lucide-react";
+import { Package, FolderPlus, List, KeyRound, Trash2, X, ArrowLeft } from "lucide-react";
 import { LibraryItems as DefaultLibraryItems, LibraryItem, LibraryItemComponent } from "./LibraryItems";
 import ComponentCatalog from "./Catalog";
 import AdminPrivileges from "./AdminPrivileges";
@@ -98,8 +98,8 @@ function CanvasSidebar({
     }
   }, []);
 
-  const togglePanel = (panelName: string) => {
-    setActivePanel(activePanel === panelName ? null : panelName);
+  const navigateToDashboard = () => {
+    window.location.href = '/dashboard';
   };
 
   // This function handles components selected from the catalog
@@ -163,12 +163,6 @@ function CanvasSidebar({
     });
   };
 
-  // This function is passed to CatalogAdmin
-  const handleSaveComponent = (componentData: any) => {
-    handleNewComponent(componentData);
-    return true; // Indicate success
-  };
-
   // Handle deleting a component from the sidebar
   const handleDeleteComponent = (itemId: string) => {
     setItemToDelete(itemId);
@@ -208,33 +202,21 @@ function CanvasSidebar({
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger>
-              <Text
+              <ArrowLeft
                 className="text-2xl cursor-pointer hover:text-gray-700"
-                onClick={() => togglePanel("text")}
+                onClick={navigateToDashboard}
               />
             </TooltipTrigger>
             <TooltipContent>
-              <p>Text Tools</p>
-            </TooltipContent>
-          </Tooltip>
-
-          <Tooltip>
-            <TooltipTrigger>
-              <LayoutGrid
-                className="text-2xl cursor-pointer hover:text-gray-700"
-                onClick={() => togglePanel("grid")}
-              />
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Layout Grid</p>
+              <p>Back to Dashboard</p>
             </TooltipContent>
           </Tooltip>
 
           <Tooltip>
             <TooltipTrigger>
               <Package
-                className="text-2xl cursor-pointer hover:text-gray-700"
-                onClick={() => togglePanel("components")}
+                className={`text-2xl cursor-pointer ${activePanel === "components" ? "text-blue-600" : "hover:text-gray-700"}`}
+                onClick={() => setActivePanel(activePanel === "components" ? null : "components")}
               />
             </TooltipTrigger>
             <TooltipContent>
@@ -251,18 +233,6 @@ function CanvasSidebar({
             </TooltipTrigger>
             <TooltipContent>
               <p>Add Components</p>
-            </TooltipContent>
-          </Tooltip>
-
-          <Tooltip>
-            <TooltipTrigger>
-              <Cpu
-                className="text-2xl cursor-pointer hover:text-gray-700"
-                onClick={() => togglePanel("cpu")}
-              />
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>System Components</p>
             </TooltipContent>
           </Tooltip>
 
@@ -293,8 +263,8 @@ function CanvasSidebar({
       </div>
 
       {/* Sidebar Component Panel */}
-      <div className="border-r shadow bg-slate-50 radius">
-        {activePanel === "components" && (
+      {activePanel === "components" && (
+        <div className="border-r shadow bg-slate-50 radius">
           <div className="grid grid-cols-2 gap-4 w-60 p-2">
             {sidebarItems.map((item) => (
               <LibraryItemComponent
@@ -315,8 +285,8 @@ function CanvasSidebar({
               />
             ))}
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Component Catalog Modal */}
       <ComponentCatalog

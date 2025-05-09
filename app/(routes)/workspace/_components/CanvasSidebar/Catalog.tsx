@@ -14,38 +14,75 @@ interface ComponentCatalogProps {
 const initialComponents = {
   passive: [
     {
-      id: '1',
-      name: 'Resistor',
-      svg: '/components/a1.png',
-      price: 50.00,
-      specs: {
-        resistance: ['10Ω', '100Ω', '1kΩ', '10kΩ'],
-        power: ['1/4W', '1/2W', '1W'],
-        tolerance: ['±1%', '±5%']
-        
-      },
-      description: 'Standard through-hole resistor for general-purpose applications'
-    },
-    {
-      id: '2',
-      name: 'Resistor2',
-      svg: '/components/a1.png',
-      price: 500.00,
-      specs: {
-        resistance: ['10Ω', '100Ω', '1kΩ', '10kΩ'],
-        power: ['1/4W', '1/2W', '1W'],
-        tolerance: ['±1%', '±5%']
-        
-      },
-      description: 'Standard through hole resistor for general-purpose applications'
-    },
+    id: "1",
+    name: "Breaker",
+    svg: "/components/22.png",
+    price: 50.00,
+    width: 100,
+    height: 100,
+    specs: {
+      power: ["default"],
+      resistance: ["default"],
+      tolerance: ["default"]
+    }
+  },
+  {
+    id: "2",
+    name: "Breaker2",
+    svg: "/components/223.png",
+    price: 75.00,
+    width: 120,
+    height: 120,
+    specs: {
+      power: ["default"],
+      resistance: ["default"],
+      tolerance: ["default"]
+    }
+  }
     // ... other passive components
   ],
   active: [
-    // ... active components
+    {
+    id: "1",
+    name: "TBreaker",
+    svg: "/components/22.png",
+    price: 50.00,
+    width: 100,
+    height: 100,
+    specs: {
+      power: ["default"],
+      resistance: ["default"],
+      tolerance: ["default"]
+    }
+  },
+  {
+    id: "2",
+    name: "TBreaker2",
+    svg: "/components/223.png",
+    price: 75.00,
+    width: 120,
+    height: 120,
+    specs: {
+      power: ["default"],
+      resistance: ["default"],
+      tolerance: ["default"]
+    }
+  }
   ],
   protection: [
-    // ... protection components
+    {
+    id: "4",
+    name: "OVR T2",
+    svg: "/components/OVR.png",
+    price: 200.00,
+    width: 70,
+    height: 80,
+    specs: {
+      power: ["default"],
+      resistance: ["default"],
+      tolerance: ["default"]
+    }
+  }
   ]
 };
 

@@ -1,4 +1,4 @@
-import { ChevronDown, LayoutGrid, LogOut, Settings, Users } from 'lucide-react'
+import { Archive, ChevronDown, LayoutGrid, LogOut, Settings, Users } from 'lucide-react'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import {
@@ -57,6 +57,7 @@ function SideNavTopSection({user,setActiveTeamInfo}:any) {
             router.push(item.path);
         }
     }
+
     return (
         <div>
         <Popover>
@@ -128,9 +129,18 @@ function SideNavTopSection({user,setActiveTeamInfo}:any) {
         {/* All File Button  */}
         <Button variant='outline'
          className='w-full justify-start
-          gap-2 font-bold mt-8 bg-gray-100'>
+          gap-2 font-bold mt-8 bg-gray-100'
+          onClick={() => router.push('/dashboard')}>
             <LayoutGrid className='h-5 w-5'/>
             All Files</Button>
+            
+        {/* Archived Files Button */}
+        <Button variant='outline'
+         className='w-full justify-start
+          gap-2 font-bold mt-2 text-gray-600 hover:text-gray-900'
+          onClick={() => router.push('/archived-files')}>
+            <Archive className='h-5 w-5'/>
+            Archived Files</Button>
         </div>
 
     )

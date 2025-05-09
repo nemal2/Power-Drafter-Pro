@@ -63,16 +63,30 @@ export const LibraryItems: LibraryItem[] = [
   {
     id: "4",
     name: "OVR T2",
-    svg: "/components/OVR T2 2L.png",
+    svg: "/components/OVR.png",
     price: 200.00,
-    width: 100,
-    height: 120,
+    width: 70,
+    height: 80,
+    specs: {
+      power: ["default"],
+      resistance: ["default"],
+      tolerance: ["default"]
+    }
+  },
+  {
+    id: "5",
+    name: "Board sm",
+    svg: "/components/board.png",
+    price: 400.00,
+    width: 600,
+    height: 200,
     specs: {
       power: ["default"],
       resistance: ["default"],
       tolerance: ["default"]
     }
   }
+   
 ];
 
 export const LibraryItemComponent: React.FC<{

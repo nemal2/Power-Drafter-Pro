@@ -51,7 +51,7 @@ const Canvas: React.FC<CanvasProps> = ({
     visible: false,
     x: 0,
     y: 0,
-    instanceId: ''
+    instanceId: '',
   });
 
   // Constants for zoom
@@ -332,13 +332,23 @@ const Canvas: React.FC<CanvasProps> = ({
     });
   }, []);
 
-  // Handle right-click to open context menu
-  const handleContextMenu = useCallback((e: React.MouseEvent, instanceId: string) => {
+  // Handle right-click to open context menu - FIXED POSITIONING
+  const handleContextMenu = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
+    
+    // Get the instanceId from the target element's data attribute
+    const target = e.currentTarget as HTMLElement;
+    const instanceId = target.dataset.instanceId || '';
+    
+    // Position context menu near the click point but with a slight offset
+    // This keeps the menu close to where the user clicked
+    const menuX = e.clientX + 5; // 5px offset to the right
+    const menuY = e.clientY + 5; // 5px offset down
+    
     setContextMenu({
       visible: true,
-      x: e.clientX,
-      y: e.clientY,
+      x: menuX,
+      y: menuY,
       instanceId
     });
   }, []);
@@ -526,7 +536,8 @@ const Canvas: React.FC<CanvasProps> = ({
             >
               <div 
                 className="absolute cursor-move"
-                onContextMenu={(e) => handleContextMenu(e, item.instanceId)}
+                data-instance-id={item.instanceId} // Important! Store instanceId as data attribute
+                onContextMenu={handleContextMenu} // Simplified context menu handler
               >
                 <div 
                   className="drag-handle relative"
@@ -541,18 +552,20 @@ const Canvas: React.FC<CanvasProps> = ({
                     transition: 'transform 0.3s ease',
                     cursor: isPanning || cursorStyle === "grab" ? cursorStyle : "move"
                   }}
-                >
-                  {/* Component visual */}
-                </div>
+                />
               </div>
             </Draggable>
           ))}
 
-          {/* Context Menu */}
+          {/* Context Menu - Now positioned close to the mouse click point */}
           {contextMenu.visible && (
             <div 
               className="fixed bg-white shadow-lg rounded-md py-2 z-50"
-              style={{ top: contextMenu.y, left: contextMenu.x }}
+              style={{
+                top: `${contextMenu.y}px`,
+                left: `${contextMenu.x}px`,
+              }}
+              onClick={(e) => e.stopPropagation()}
             >
               <button 
                 className="w-full text-left px-4 py-2 hover:bg-gray-100"

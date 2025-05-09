@@ -1,16 +1,13 @@
 export const categories = {
-  'all': 'All Categories',
-  'resistors': 'Resistors',
-  'capacitors': 'Capacitors',
-  'transistors': 'Transistors',
-  'breakers': 'Circuit Breakers',
-  'switches': 'Switches',
-  'controllers': 'Controllers',
-  'misc': 'Miscellaneous'
+  'passive': 'Passive Components',
+  'active': 'Active Components',
+  'protection': 'Protection Devices',
+  'connectors': 'Connectors'
+
 };
 
 export const components = {
-  'breakers': [
+  'passive': [
     {
       id: 'breaker-1',
       name: 'Breaker',
@@ -54,12 +51,12 @@ export const components = {
       }
     }
   ],
-  'switches': [
+  'active': [
     {
       id: 'ovr-t2',
       name: 'OVR T2',
       description: 'OVR T2 2L switch',
-      svg: '/components/OVR T2 2L.png',
+      svg: '/components/OVR.png',
       price: 200.00,
       width: 100,
       height: 120,
@@ -98,7 +95,7 @@ export const components = {
       }
     }
   ],
-  'controllers': [
+  'protection': [
     {
       id: 'controller-1',
       name: 'Controller',

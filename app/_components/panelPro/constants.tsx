@@ -60,7 +60,8 @@ export const features: Feature[] = [
 export interface PricingTier {
   name: string;
   features: string[];
-  price: number;
+  price: string;
+  description: string;
   buttonText: string;
   isHighlighted?: boolean;
   savingsText?: string;
@@ -69,41 +70,50 @@ export interface PricingTier {
 export const pricingTiers: PricingTier[] = [
   {
     name: "Free",
+    description: "Perfect for individuals starting out with panel design",
     features: [
-      "Feature 1",
-      "Feature 2",
-      "Feature 3",
-      "Exclusive Deals",
-      "Feature 5",
+      "Basic drag-and-drop design interface",
+      "Up to 5 saved projects",
+      "Standard component library (100+ items)",
+      "Basic PDF export",
+      "Real-time cost calculation",
+      "Community forum support"
     ],
-    price: 123,
-    buttonText: "Choose",
+    price: "$0/mo",
+    buttonText: "Get Started",
   },
   {
-    name: "Base",
+    name: "Professional",
+    description: "Great for small businesses and contractors",
     features: [
-      "Feature 1",
-      "Feature 2",
-      "Feature 3",
-      "Exclusive Deals",
-      "Feature 5",
+      "Advanced design interface with templates",
+      "Unlimited saved projects",
+      "Extended component library (500+ items)",
+      "Branded PDF exports with your logo",
+      "Real-time cost calculation",
+      "Cloud storage and sharing",
+      "Email technical support"
     ],
-    price: 123,
-    buttonText: "Choose",
+    price: "$29/mo",
+    buttonText: "Upgrade Now",
   },
   {
-    name: "Pro",
+    name: "Enterprise",
+    description: "Complete solution for engineering firms",
     features: [
-      "Feature 1",
-      "Feature 2",
-      "Feature 3",
-      "Exclusive Deals",
-      "Feature 5",
+      "Everything in Professional plan",
+      "Custom component library creation",
+      "Team collaboration tools",
+      "Advanced circuit validation",
+      "DWG/DXF import and export",
+      "Automated quotation generation",
+      "API access for integrations",
+      "Priority 24/7 support"
     ],
-    price: 123,
-    buttonText: "Try 1 month",
+    price: "$89/mo",
+    buttonText: "Contact Sales",
     isHighlighted: true,
-    savingsText: "Save $40",
+    savingsText: "Save $210/year",
   },
 ];
 

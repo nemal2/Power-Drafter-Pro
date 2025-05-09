@@ -62,39 +62,86 @@ const Workspace: React.FC<{ params: { fileId: string } }> = ({ params }) => {
   };
 
   useEffect(() => {
-    const loadState = async () => {
-      try {
-        setLoading(true);
-        const state = await convex.query(api.files.getFileById, {
-          fileId: params.fileId as Id<"files">
-        });
-        
-        if (state?.canvasComponents?.length > 0) {
-          // Create deep copies to prevent reference issues
-          const initialComponents = JSON.parse(JSON.stringify(state.canvasComponents));
-          setComponents(initialComponents);
+    // Updated loadState function to merge dimensions from localStorage
+const loadState = async () => {
+  try {
+    setLoading(true);
+    const state = await convex.query(api.files.getFileById, {
+      fileId: params.fileId as Id<"files">
+    });
+    
+    if (state?.canvasComponents?.length > 0) {
+      // Create deep copies to prevent reference issues
+      let initialComponents = JSON.parse(JSON.stringify(state.canvasComponents));
+      
+      // Try to load dimensions from localStorage
+      const savedDimensions = localStorage.getItem(`canvas_dimensions_${params.fileId}`);
+      if (savedDimensions) {
+        try {
+          const dimensionsData = JSON.parse(savedDimensions);
           
-          // Initialize history with a single initial state
-          const initialHistory = [{ 
-            type: 'add',
-            affectedItems: initialComponents.map((c: any) => c.instanceId),
-            snapshot: initialComponents
-          }];
-          setHistory(initialHistory);
-          setCurrentStep(0);
-        } else {
-          // Initialize with empty state
-          setComponents([]);
-          setHistory([{ type: 'reset', affectedItems: [], snapshot: [] }]);
-          setCurrentStep(0);
+          // Create a map of dimensions by instanceId
+          const dimensionsMap = {};
+          dimensionsData.forEach(item => {
+            if (item.instanceId && (item.width || item.height)) {
+              dimensionsMap[item.instanceId] = {
+                width: item.width || 100,
+                height: item.height || 100
+              };
+            }
+          });
+          
+          // Apply dimensions to loaded components
+          initialComponents = initialComponents.map(comp => {
+            const savedDims = dimensionsMap[comp.instanceId];
+            if (savedDims) {
+              return {
+                ...comp,
+                width: savedDims.width,
+                height: savedDims.height
+              };
+            }
+            return {
+              ...comp,
+              width: comp.width || 100,  // Default width
+              height: comp.height || 100 // Default height
+            };
+          });
+        } catch (e) {
+          console.error("Error parsing saved dimensions:", e);
         }
-      } catch (error) {
-        console.error("Error loading state:", error);
-        toast.error("Failed to load workspace");
-      } finally {
-        setLoading(false);
+      } else {
+        // If no saved dimensions, ensure all components have default width/height
+        initialComponents = initialComponents.map(comp => ({
+          ...comp,
+          width: 100,  // Default width
+          height: 100  // Default height
+        }));
       }
-    };
+      
+      setComponents(initialComponents);
+      
+      // Initialize history with a single initial state
+      const initialHistory = [{ 
+        type: 'add',
+        affectedItems: initialComponents.map((c: any) => c.instanceId),
+        snapshot: initialComponents
+      }];
+      setHistory(initialHistory);
+      setCurrentStep(0);
+    } else {
+      // Initialize with empty state
+      setComponents([]);
+      setHistory([{ type: 'reset', affectedItems: [], snapshot: [] }]);
+      setCurrentStep(0);
+    }
+  } catch (error) {
+    console.error("Error loading state:", error);
+    toast.error("Failed to load workspace");
+  } finally {
+    setLoading(false);
+  }
+};
 
     if (params.fileId) {
       loadState();
@@ -338,60 +385,68 @@ const Workspace: React.FC<{ params: { fileId: string } }> = ({ params }) => {
   }, [components, addToHistory]);
 
   // Save the current state
-  const handleSave = async () => {
-    try {
-      setSaving(true);
-      
-      // Calculate budget items from current components
-      const budget = {
-        total: components.reduce((sum, item) => sum + item.price, 0),
-        items: Array.from(
-          components.reduce((map, item) => {
-            const existing = map.get(item.id);
-            if (existing) {
-              existing.quantity += 1;
-            } else {
-              map.set(item.id, {
-                id: item.id,
-                name: item.name,
-                quantity: 1,
-                price: item.price
-              });
-            }
-            return map;
-          }, new Map())
-        ).map(([_, item]) => item)
-      };
-  
-      // Ensure all components have a rotation value and required specs
-      const componentsToSave = components.map(comp => {
-        const { width, height, ...rest } = comp;
-        return {
-          ...rest,
-          rotation: rest.rotation ?? 0.0,
-          // Ensure specs object has resistance field
-          specs: {
-            ...comp.specs,
-            resistance: comp.specs?.resistance || ["default"]
+// handleSave function with fix to preserve width and height
+// handleSave function that removes width and height to match the server validator
+const handleSave = async () => {
+  try {
+    setSaving(true);
+    
+    // Calculate budget items from current components
+    const budget = {
+      total: components.reduce((sum, item) => sum + item.price, 0),
+      items: Array.from(
+        components.reduce((map, item) => {
+          const existing = map.get(item.id);
+          if (existing) {
+            existing.quantity += 1;
+          } else {
+            map.set(item.id, {
+              id: item.id,
+              name: item.name,
+              quantity: 1,
+              price: item.price
+            });
           }
-        };
-      });
-  
-      await convex.mutation(api.files.saveCanvasState, {
-        fileId: params.fileId as Id<"files">,
-        components: componentsToSave,
-        budget
-      });
-  
-      toast.success("Workspace saved successfully");
-    } catch (error) {
-      console.error("Error saving workspace:", error);
-      toast.error("Failed to save workspace");
-    } finally {
-      setSaving(false);
-    }
-  };
+          return map;
+        }, new Map())
+      ).map(([_, item]) => item)
+    };
 
+    // Store original component data in localStorage before saving to server
+    // This preserves width/height that the server validator doesn't accept
+    const componentsWithDimensions = JSON.stringify(components);
+    localStorage.setItem(`canvas_dimensions_${params.fileId}`, componentsWithDimensions);
+
+    // Remove width and height for the server since they're not in the validator
+    const componentsToSave = components.map(comp => {
+      // Extract only the fields that the server validator accepts
+      const { width, height, category, ...serverSafeComponent } = comp;
+      
+      return {
+        ...serverSafeComponent,
+        rotation: serverSafeComponent.rotation ?? 0.0,
+        // Ensure specs object has resistance field
+        specs: {
+          ...comp.specs,
+          resistance: comp.specs?.resistance || ["default"]
+        }
+      };
+    });
+
+    await convex.mutation(api.files.saveCanvasState, {
+      fileId: params.fileId as Id<"files">,
+      components: componentsToSave,
+      budget
+    });
+
+    toast.success("Workspace saved successfully");
+  } catch (error) {
+    console.error("Error saving workspace:", error);
+    toast.error("Failed to save workspace");
+  } finally {
+    setSaving(false);
+  }
+};
   if (loading) {
     return (
       <div className="h-screen flex items-center justify-center">
