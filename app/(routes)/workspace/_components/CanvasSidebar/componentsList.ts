@@ -13,7 +13,7 @@ export const components = {
       name: 'Breaker',
       description: 'Standard circuit breaker',
       svg: '/components/22.png',
-      price: 50.00,
+      price: 60.00,
       width: 100,
       height: 100,
       specs: {
