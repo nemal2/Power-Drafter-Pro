@@ -19,9 +19,9 @@ function WorkspaceHeader({onSave}:any) {
         onClick={()=>onSave()}
         > 
         <Save className='h-4 w-4' /> Save </Button>
-        <Button className='h-8 text-[12px]
+{/*         <Button className='h-8 text-[12px]
         gap-2 bg-blue-600 hover:bg-blue-700'>
-          Share <Link className='h-4 w-4' /> </Button>
+          Share <Link className='h-4 w-4' /> </Button> */}
       </div>
     </div>
   )
